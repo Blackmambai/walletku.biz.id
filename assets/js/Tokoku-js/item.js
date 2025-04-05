@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.png'}" 
              class="card-img-top" 
              alt="${produk.namaProduk}"
-             style="border-radius: 16px 16px 0 0; object-fit: cover;height: 200px">
+             style="border-radius: 16px 16px 0 0; object-fit: cover;height: 200px" loading="lazy">
         <div class="card-body">
             <h5 class="fw-bold text-bg-warning card-title" style="padding: 6px;padding-right: 12px;padding-left: 12px;border-radius: 16px;">${produk.namaProduk}</h5>
             <div class="card-text">
