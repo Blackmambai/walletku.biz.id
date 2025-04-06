@@ -486,9 +486,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 DOM.walletsContainer.innerHTML = `
                     <div class="empty-state">
                         <p>Anda belum memiliki dompet/tabungan</p>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#walletModal">
-                            Tambah Dompet Pertama
-                        </button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#walletModal"><i class="fas fa-plus"></i> Tambah dompet dulu yuk</button>
                     </div>
                 `;
                 return;
