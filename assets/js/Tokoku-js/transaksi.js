@@ -18,76 +18,124 @@ document.addEventListener('DOMContentLoaded', () => {
         const pengaturanToko = JSON.parse(localStorage.getItem('pengaturanToko') || '{}');
         
         return `
-            <div id="strukCetak" style="
-                max-width: 300px; 
-                margin: 0 auto; 
-                font-family: 'Courier New', monospace; 
-                padding: 10px; 
-                border: 1px dashed #000;
-            ">
-                <div style="text-align: center;">
-                    ${pengaturanToko.logoToko ? 
-                        `<img src="${pengaturanToko.logoToko}" 
-                               style="max-width: 100px; max-height: 100px; margin-bottom: 10px;">` 
-                        : ''
-                    }
-                    <h3 style="margin: 0;">${pengaturanToko.namaToko || 'TOKO SAYA'}</h3>
-                    <p style="margin: 5px 0; font-size: 0.8em;">
-                        ${pengaturanToko.alamatToko || 'Alamat Tidak Tersedia'}
-                    </p>
-                    <p style="margin: 5px 0; font-size: 0.8em;">
-                        WA: ${pengaturanToko.nomorWAToko || '-'}
-                    </p>
-                    <hr style="border-top: 1px dashed #000;">
+            <div id="strukCetak" class="container-fluid p-3" style="
+    max-width: 400px; 
+    margin: 0 auto; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 2px solid #4a90e2;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9f5ff 100%);
+">
+    <!-- Watermark -->
+    <div style="
+        position: absolute;
+        opacity: 0.1;
+        font-size: 120px;
+        font-weight: bold;
+        color: #4a90e2;
+        transform: rotate(-30deg);
+        top: 30%;
+        left: 10%;
+        z-index: 0;
+        pointer-events: none;
+    ">
+        walletku.biz.id
+    </div>
+    
+    <div class="position-relative" style="z-index: 1;">
+        <!-- Header -->
+        <div class="text-center mb-3">
+            ${pengaturanToko.logoToko ? 
+                `<img src="${pengaturanToko.logoToko}" 
+                       class="img-fluid mb-2" 
+                       style="max-height: 80px;">` 
+                : ''
+            }
+            <h3 class="mb-1" style="color: #2c3e50; font-weight: bold;">
+                ${pengaturanToko.namaToko || 'TOKO SAYA'}
+            </h3>
+            <p class="mb-1 text-muted small">
+                <i class="fas fa-map-marker-alt"></i> ${pengaturanToko.alamatToko || 'Alamat Tidak Tersedia'}
+            </p>
+            <p class="mb-2 text-muted small">
+                <i class="fab fa-whatsapp"></i> ${pengaturanToko.nomorWAToko || '-'}
+            </p>
+            <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
+        </div>
+        
+        <!-- Customer Info -->
+        <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Nama:</span>
+                <span style="font-weight: 500;">${nota.namaPelanggan || 'Pelanggan Umum'}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Tanggal:</span>
+                <span style="font-weight: 500;">${nota.tanggal}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Metode:</span>
+                <span class="badge bg-primary">${nota.metodePembayaran}</span>
+            </div>
+            <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
+        </div>
+        
+        <!-- Product List -->
+        <div class="mb-3">
+            <table class="table table-sm">
+                <thead>
+                    <tr style="background-color: #e9f5ff;">
+                        <th class="ps-0" style="color: #2c3e50;">Produk</th>
+                        <th class="text-end pe-0" style="color: #2c3e50;">Jumlah</th>
+                        <th class="text-end pe-0" style="color: #2c3e50;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${nota.produk.map(item => `
+                        <tr>
+                            <td class="ps-0">${item.nama}</td>
+                            <td class="text-end pe-0">${item.jumlah} x ${item.harga.toLocaleString()}</td>
+                            <td class="text-end pe-0" style="font-weight: 500;">${(item.harga * item.jumlah).toLocaleString()}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            
+            <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
+            
+            <!-- Summary -->
+            <div class="mb-2">
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Total:</span>
+                    <span class="fw-bold" style="color: #2c3e50;">Rp ${nota.totalHarga.toLocaleString()}</span>
                 </div>
-                
-                <div>
-                    <p style="margin: 5px 0;">Nama: ${nota.namaPelanggan || 'Pelanggan Umum'}</p>
-                    <p style="margin: 5px 0;">Tanggal: ${nota.tanggal}</p>
-                    <p style="margin: 5px 0;">Metode: ${nota.metodePembayaran}</p>
-                    <hr style="border-top: 1px dashed #000;">
-                    
-                    <table style="width: 100%; font-size: 0.9em;">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left;">Produk</th>
-                                <th style="text-align: right;">Jumlah</th>
-                                <th style="text-align: right;">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${nota.produk.map(item => `
-                                <tr>
-                                    <td>${item.nama}</td>
-                                    <td style="text-align: right;">${item.jumlah} x ${item.harga.toLocaleString()}</td>
-                                    <td style="text-align: right;">${(item.harga * item.jumlah).toLocaleString()}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                    
-                    <hr style="border-top: 1px dashed #000;">
-                    
-                    <div style="display: flex; justify-content: space-between; font-size: 0.9em;">
-                        <strong>Total:</strong>
-                        <span>Rp ${nota.totalHarga.toLocaleString()}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.9em;">
-                        <strong>Bayar:</strong>
-                        <span>Rp ${nota.uangDiterima.toLocaleString()}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.9em;">
-                        <strong>Kembali:</strong>
-                        <span>Rp ${nota.kembalian.toLocaleString()}</span>
-                    </div>
-                    
-                    <hr style="border-top: 1px dashed #000;">
-                    
-                    <p style="text-align: center; font-size: 0.8em;">
-                        ${pengaturanToko.catatanKakiStruk || 'Terima Kasih'}
-                    </p>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Bayar:</span>
+                    <span class="fw-bold" style="color: #27ae60;">Rp ${nota.uangDiterima.toLocaleString()}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Kembali:</span>
+                    <span class="fw-bold" style="color: #e74c3c;">Rp ${nota.kembalian.toLocaleString()}</span>
                 </div>
             </div>
+            
+            <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
+            
+            <!-- Footer -->
+            <div class="text-center mt-3">
+                <p class="small text-muted mb-1">
+                    ${pengaturanToko.catatanKakiStruk || 'Terima Kasih Telah Berbelanja'}
+                
+        <p style="font-size: 0.7rem; color: #4a90e2; font-weight: 500; margin: 0;">
+            <i class="fas fa-lock" premium></i> WalletKu.biz.id | Upgrade Premium
+        </p>
+            </div>
+        </div>
+    </div>
+</div>
         `;
     }
 

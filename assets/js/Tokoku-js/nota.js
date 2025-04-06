@@ -66,42 +66,122 @@ document.addEventListener('DOMContentLoaded', () => {
         notaDetail = notaList[index];
 
         detailNotaContent.innerHTML = `
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Informasi Nota</h5>
-                    <p><strong>Tanggal:</strong> ${notaDetail.tanggal}</p>
-                    <p><strong>Nama Pelanggan:</strong> ${notaDetail.namaPelanggan}</p>
-                    <p><strong>Metode Pembayaran:</strong> ${notaDetail.metodePembayaran}</p>
+            <div id="strukCetak" style="
+    max-width: 100%;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    border: 2px solid #4a90e2;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.2);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9f5ff 100%);
+    position: relative;
+    overflow: hidden;
+">
+    <!-- Watermark -->
+    <div style="
+        position: absolute;
+        opacity: 0.08;
+        font-size: 120px;
+        font-weight: bold;
+        color: #4a90e2;
+        transform: rotate(-30deg);
+        top: 30%;
+        left: 10%;
+        z-index: 0;
+        pointer-events: none;
+    ">
+        NOTABOOST
+    </div>
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h3 style="color: #2c3e50; font-weight: bold; margin-bottom: 5px;">NOTA PENJUALAN</h3>
+        <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
+    </div>
+
+    <!-- Informasi Nota -->
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-md-6">
+            <div style="background-color: #e9f5ff; padding: 12px; border-radius: 8px;">
+                <h5 style="color: #2c3e50; border-bottom: 1px solid #4a90e2; padding-bottom: 5px; font-size: 1rem;">
+                    <i class="fas fa-info-circle"></i> INFORMASI NOTA
+                </h5>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="color: #6c757d;">Tanggal:</span>
+                    <span style="font-weight: 500;">${notaDetail.tanggal}</span>
                 </div>
-                <div class="col-md-6 text-end">
-                    <h5>Ringkasan Transaksi</h5>
-                    <p><strong>Total Penjualan:</strong> Rp ${notaDetail.totalHarga.toLocaleString()}</p>
-                    <p><strong>Uang Diterima:</strong> Rp ${notaDetail.uangDiterima.toLocaleString()}</p>
-                    <p><strong>Kembalian:</strong> Rp ${notaDetail.kembalian.toLocaleString()}</p>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="color: #6c757d;">Nama Pelanggan:</span>
+                    <span style="font-weight: 500;">${notaDetail.namaPelanggan}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;" class="align-items-start">
+                    <span style="color: #6c757d;">Metode Pembayaran:</span>
+                    <span class="badge text-nowrap" style="background-color: #4a90e2; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem;">
+                        ${notaDetail.metodePembayaran}
+                    </span>
                 </div>
             </div>
-            <hr>
-            <h5>Daftar Produk</h5>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Produk</th>
-                        <th>Harga</th>
-                        <th>Jumlah</th>
-                        <th>Total</th>
+        </div>
+        
+        <div class="col-md-6">
+            <div style="background-color: #f0f8ff; padding: 12px; border-radius: 8px;">
+                <h5 style="color: #2c3e50; border-bottom: 1px solid #4a90e2; padding-bottom: 5px; font-size: 1rem;">
+                    <i class="fas fa-receipt"></i> RINGKASAN TRANSAKSI
+                </h5>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="color: #6c757d;">Total Penjualan:</span>
+                    <span style="font-weight: bold; color: #2c3e50;">Rp ${notaDetail.totalHarga.toLocaleString()}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="color: #6c757d;">Uang Diterima:</span>
+                    <span style="font-weight: bold; color: #28a745;">Rp ${notaDetail.uangDiterima.toLocaleString()}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #6c757d;">Kembalian:</span>
+                    <span style="font-weight: bold; color: #dc3545;">Rp ${notaDetail.kembalian.toLocaleString()}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daftar Produk -->
+    <div>
+        <h5 style="color: #2c3e50; border-bottom: 1px solid #4a90e2; padding-bottom: 5px; font-size: 1rem;">
+            <i class="fas fa-boxes"></i> DAFTAR PRODUK
+        </h5>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+            <thead>
+                <tr style="background-color: #e9f5ff; border-bottom: 2px solid #4a90e2;">
+                    <th style="padding: 8px; text-align: left;">Produk</th>
+                    <th style="padding: 8px; text-align: right;">Harga</th>
+                    <th style="padding: 8px; text-align: center;">Jumlah</th>
+                    <th style="padding: 8px; text-align: right;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${notaDetail.produk.map(produk => `
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td style="padding: 8px;">${produk.nama}</td>
+                        <td style="padding: 8px; text-align: right;">Rp ${produk.harga.toLocaleString()}</td>
+                        <td style="padding: 8px; text-align: center;">${produk.jumlah}</td>
+                        <td style="padding: 8px; text-align: right; font-weight: 500;">Rp ${(produk.harga * produk.jumlah).toLocaleString()}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    ${notaDetail.produk.map(produk => `
-                        <tr>
-                            <td>${produk.nama}</td>
-                            <td>Rp ${produk.harga.toLocaleString()}</td>
-                            <td>${produk.jumlah}</td>
-                            <td>Rp ${(produk.harga * produk.jumlah).toLocaleString()}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; margin-top: 20px;">
+        <p style="font-size: 0.8rem; color: #6c757d; margin-bottom: 5px;">
+            Terima kasih telah berbelanja dengan kami
+        </p>
+        <p style="font-size: 0.7rem; color: #4a90e2; font-weight: 500; margin: 0;">
+            <i class="fas fa-lock premium"></i> WalletKu.biz.id | Upgrade Premium
+        </p>
+    </div>
+</div>
         `;
 
         modalDetailNota.show();

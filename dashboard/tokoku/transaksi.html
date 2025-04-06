@@ -306,7 +306,62 @@
                                         </svg>
                                     </div>
                                     <div class="modal-body" id="strukPembayaran"></div>
-                                    <div class="modal-footer"><button class="btn btn-primary text-start d-flex d-xxl-flex justify-content-center align-items-center d-flex" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" type="button" onclick="window.print()"><i class="fas fa-print" style="margin-right: 10px;"></i> Cetak Nota</button><button class="btn btn-primary text-start d-flex d-xxl-flex justify-content-center align-items-center d-flex" id="btnCetakNota" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" type="button" onclick="window.print()"><i class="fas fa-print" style="margin-right: 10px;"></i> Cetak Nota Penuh</button></div>
+                                    <div class="modal-footer"><script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <script>
+        // Data contoh - ganti dengan data sebenarnya
+        const pengaturanToko = {
+            namaToko: "Toko NotaBoost",
+            alamatToko: "Jl. Contoh No. 123, Jakarta",
+            nomorWAToko: "081234567890",
+            catatanKakiStruk: "Terima kasih telah berbelanja di Toko NotaBoost",
+            logoToko: "https://via.placeholder.com/100"
+        };
+
+        const nota = {
+            namaPelanggan: "John Doe",
+            tanggal: new Date().toLocaleDateString(),
+            metodePembayaran: "Tunai",
+            produk: [
+                { nama: "Produk A", jumlah: 2, harga: 50000 },
+                { nama: "Produk B", jumlah: 1, harga: 75000 },
+                { nama: "Produk C", jumlah: 3, harga: 25000 }
+            ],
+            totalHarga: 200000,
+            uangDiterima: 250000,
+            kembalian: 50000
+        };
+
+        // Fungsi untuk menyimpan nota sebagai HTML
+        function downloadNota() {
+            const content = document.getElementById('strukCetak').outerHTML;
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'notabost.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Fungsi untuk mencetak nota
+        function printNota() {
+            window.print();
+        }
+
+        // Fungsi untuk capture dan download sebagai gambar
+        function captureAndDownload() {
+            html2canvas(document.getElementById('strukCetak')).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'notabost.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script><button class="btn btn-primary text-start d-flex d-xxl-flex justify-content-center align-items-center d-flex" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" type="button" onclick="window.print()"><i class="fas fa-print" style="margin-right: 10px;"></i> Cetak Nota</button><button class="btn btn-primary text-start d-flex d-xxl-flex justify-content-center align-items-center d-flex premium" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" type="button" onclick="captureAndDownload()"><i class="fas fa-photo-video" style="margin-right: 10px;"></i> Cetak Foto</button></div>
                                 </div>
                             </div>
                         </div>

@@ -190,9 +190,6 @@
                                         <div style="margin-right: 16px;margin-bottom: 16px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);">
                                                 <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
                                                 <path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm96 288H448c17.7 0 32-14.3 32-32V251.8c0-7.6-2.7-15-7.7-20.8l-65.8-76.8c-12.1-14.2-33.7-15-46.9-1.8l-21 21c-10 10-26.4 9.2-35.4-1.6l-39.2-47c-12.6-15.1-35.7-15.4-48.7-.6L135.9 215c-5.1 5.8-7.9 13.3-7.9 21.1v84c0 17.7 14.3 32 32 32z"></path>
-                                            </svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);">
-                                                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
-                                                <path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm96 288H448c17.7 0 32-14.3 32-32V251.8c0-7.6-2.7-15-7.7-20.8l-65.8-76.8c-12.1-14.2-33.7-15-46.9-1.8l-21 21c-10 10-26.4 9.2-35.4-1.6l-39.2-47c-12.6-15.1-35.7-15.4-48.7-.6L135.9 215c-5.1 5.8-7.9 13.3-7.9 21.1v84c0 17.7 14.3 32 32 32z"></path>
                                             </svg></div>
                                         <div>
                                             <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 16px;">Ringkasan Terakhir</h3>
@@ -205,7 +202,62 @@
                                 <div class="col d-flex flex-column justify-content-start flex-sm-column flex-md-column flex-lg-row flex-xl-row flex-xxl-row align-items-xxl-start" style="gap: 16px;margin-bottom: 30px;">
                                     <div class="d-flex flex-column summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
                                         <div class="d-flex justify-content-between">
-                                            <div class="d-flex"><span style="font-size: 20px;font-family: Nunito, sans-serif;color: rgb(57,11,175);font-weight: bold;">Nota</span></div>
+                                            <div class="d-flex"><span style="font-size: 20px;font-family: Nunito, sans-serif;color: rgb(57,11,175);font-weight: bold;">Nota</span></div><script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <script>
+        // Data contoh - ganti dengan data sebenarnya
+        const pengaturanToko = {
+            namaToko: "Toko NotaBoost",
+            alamatToko: "Jl. Contoh No. 123, Jakarta",
+            nomorWAToko: "081234567890",
+            catatanKakiStruk: "Terima kasih telah berbelanja",
+            logoToko: "https://via.placeholder.com/70"
+        };
+
+        const nota = {
+            namaPelanggan: "John Doe",
+            tanggal: new Date().toLocaleDateString(),
+            metodePembayaran: "Tunai",
+            produk: [
+                { nama: "Produk A", jumlah: 2, harga: 50000 },
+                { nama: "Produk B", jumlah: 1, harga: 75000 },
+                { nama: "Produk C", jumlah: 3, harga: 25000 }
+            ],
+            totalHarga: 200000,
+            uangDiterima: 250000,
+            kembalian: 50000
+        };
+
+        // Fungsi untuk menyimpan nota sebagai HTML
+        function downloadNota() {
+            const content = document.getElementById('strukCetak').outerHTML;
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'notabost.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Fungsi untuk mencetak nota
+        function printNota() {
+            window.print();
+        }
+
+        // Fungsi untuk capture dan download sebagai gambar
+        function captureAndDownload() {
+            html2canvas(document.getElementById('strukCetak')).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'notabost.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
                                             <div class="d-flex" style="gap: 16px;"><button class="btn btn-primary text-nowrap text-start d-xxl-flex justify-content-center align-items-center d-flex" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" data-bs-toggle="modal" data-bs-target="#modalFilter"><i class="fas fa-filter" style="margin-right: 10px;"></i>Filter</button><a class="btn btn-primary disabled text-nowrap text-start justify-content-center align-items-center d-flex" role="button" id="btnExportLaporan" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;"><i class="fas fa-file-export" style="margin-right: 10px;"></i> Export</a></div>
                                         </div>
                                         <div class="card-body">
