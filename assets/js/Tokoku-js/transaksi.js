@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="col-md-4" style="padding: 5px;margin-bottom: 16px;">
     <div class="card summary-card paddingAll produk01" style="padding: 10px;">
         <div class="card-body" style="padding: 0px;">
-            <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.png'}" 
+            <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.webp'}" 
              class="card-img-top" 
              alt="${produk.namaProduk}"
              style="border-radius: 16px 16px 0 0; object-fit: cover;height: 200px;margin-bottom: 16px; >

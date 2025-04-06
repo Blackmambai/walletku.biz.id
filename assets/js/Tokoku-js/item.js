@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         daftarProduk.innerHTML = produkList.map((produk, index) => `
             <div class="col-md-4 col-lg-3 col-sm-6 col-12 mb-4">
     <div class="card card-produk border-0 shadow" style="border-radius: 16px;">
-        <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.png'}" 
+        <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.webp'}" 
              class="card-img-top" 
              alt="${produk.namaProduk}"
              style="border-radius: 16px 16px 0 0; object-fit: cover;height: 200px" loading="lazy">
