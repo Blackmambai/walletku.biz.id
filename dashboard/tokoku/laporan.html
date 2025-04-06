@@ -144,7 +144,7 @@
                     <div class="card shadow d-flex justify-content-start align-items-center" style="border-radius: 16px;">
                         <div class="d-flex flex-column app-container" style="width: 100%;margin: 0px;padding-right: 16px;padding-left: 16px;padding-top: 16px;">
                             <div class="alert alert-primary align-items-start alert-dismissible premium2" role="alert" id="alert" style="background: linear-gradient(15deg, #aa0000 12%, rgb(231,22,22) 49%, #ff5353 85%), #ff5f55;border-radius: 16px;width: 100%;"><button class="btn-close btn-close-white" type="button" aria-label="Close" data-bs-dismiss="alert"></button>
-                                <div class="d-flex justify-content-between"><span class="text-light" aria-hidden="&quot;true&quot;>&amp;times;" style="font-size: 16px;">Akun anda&nbsp;<span class="status" aria-hidden="&quot;true&quot;>&amp;times;" style="color: rgb(250,255,0);">Status</span>&nbsp;pelajari lebih lanjut. klik&nbsp;<a class="alert-link link-light" href="berlangganan.html"><span style="font-weight: normal !important;">disini</span></a></span></div>
+                                <div class="d-flex justify-content-between"><span class="text-light" aria-hidden="&quot;true&quot;>&amp;times;" style="font-size: 16px;">Akun anda&nbsp;<span class="status" aria-hidden="&quot;true&quot;>&amp;times;" style="color: rgb(250,255,0);">Status</span>&nbsp;tidak dapat mencetak gambar, karena fitur ini tersedia di akun premium. cek&nbsp;<a class="alert-link link-light" href="berlangganan.html"><span style="font-weight: normal !important;">disini</span></a></span></div>
                             </div>
                             <div class="alert alert-primary align-items-start alert-dismissible" role="alert" id="alert2" style="background: linear-gradient(15deg, #4a11a7 12%, rgb(99,84,186) 50%, rgb(57,11,175) 90%), #ff5f55;border-radius: 16px;width: 100%;"><button class="btn-close btn-close-white" type="button" aria-label="Close" data-bs-dismiss="alert"></button>
                                 <div class="d-flex justify-content-between"><span class="text-light" aria-hidden="&quot;true&quot;>&amp;times;" style="font-size: 16px;">Setelah transaksi, di mohon untuk me-refresh halaman</span></div>
@@ -207,63 +207,8 @@
                                 <div class="col d-flex flex-column justify-content-start flex-sm-column flex-md-column flex-lg-row flex-xl-row flex-xxl-row align-items-xxl-start" style="gap: 16px;margin-bottom: 30px;">
                                     <div class="d-flex flex-column summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
                                         <div class="d-flex justify-content-between">
-                                            <div class="d-flex"><span style="font-size: 20px;font-family: Nunito, sans-serif;color: rgb(57,11,175);font-weight: bold;">Nota</span></div><script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    
-    <script>
-        // Data contoh - ganti dengan data sebenarnya
-        const pengaturanToko = {
-            namaToko: "Toko NotaBoost",
-            alamatToko: "Jl. Contoh No. 123, Jakarta",
-            nomorWAToko: "081234567890",
-            catatanKakiStruk: "Terima kasih telah berbelanja",
-            logoToko: "https://via.placeholder.com/70"
-        };
-
-        const nota = {
-            namaPelanggan: "John Doe",
-            tanggal: new Date().toLocaleDateString(),
-            metodePembayaran: "Tunai",
-            produk: [
-                { nama: "Produk A", jumlah: 2, harga: 50000 },
-                { nama: "Produk B", jumlah: 1, harga: 75000 },
-                { nama: "Produk C", jumlah: 3, harga: 25000 }
-            ],
-            totalHarga: 200000,
-            uangDiterima: 250000,
-            kembalian: 50000
-        };
-
-        // Fungsi untuk menyimpan nota sebagai HTML
-        function downloadNota() {
-            const content = document.getElementById('strukCetak').outerHTML;
-            const blob = new Blob([content], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'notabost.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        // Fungsi untuk mencetak nota
-        function printNota() {
-            window.print();
-        }
-
-        // Fungsi untuk capture dan download sebagai gambar
-        function captureAndDownload() {
-            html2canvas(document.getElementById('strukCetak')).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'notabost.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        }
-    </script>
-                                            <div class="d-flex" style="gap: 16px;"><button class="btn btn-primary text-nowrap text-start d-xxl-flex justify-content-center align-items-center d-flex" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" data-bs-toggle="modal" data-bs-target="#modalFilter"><i class="fas fa-filter" style="margin-right: 10px;"></i>Filter</button><a class="btn btn-primary disabled text-nowrap text-start d-none justify-content-center align-items-center d-flex" role="button" id="btnExportLaporan" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;"><i class="fas fa-file-export" style="margin-right: 10px;"></i> Export</a></div>
+                                            <div class="d-flex"><span style="font-size: 20px;font-family: Nunito, sans-serif;color: rgb(57,11,175);font-weight: bold;">Nota</span></div>
+                                            <div class="d-flex" style="gap: 16px;"><button class="btn btn-primary text-nowrap text-start d-xxl-flex justify-content-center align-items-center d-flex premium2" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" data-bs-toggle="modal" data-bs-target="#modalFilter"><i class="fas fa-filter" style="margin-right: 10px;"></i>Filter</button><a class="btn btn-primary disabled text-nowrap text-start d-none justify-content-center align-items-center d-flex" role="button" id="btnExportLaporan" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;"><i class="fas fa-file-export" style="margin-right: 10px;"></i> Export</a></div>
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive" style="font-family: Nunito, sans-serif;">

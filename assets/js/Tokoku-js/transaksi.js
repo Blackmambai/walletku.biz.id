@@ -129,9 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="small text-muted mb-1">
                     ${pengaturanToko.catatanKakiStruk || 'Terima Kasih Telah Berbelanja'}
                 
-        <p style="font-size: 0.7rem; color: #4a90e2; font-weight: 500; margin: 0;">
-            <i class="fas fa-lock" premium></i> WalletKu.biz.id | Upgrade Premium
-        </p>
+             <div class="premium2">      
+                <p class="premium" style="font-size: 0.7rem; color: #4a90e2; font-weight: 500; margin: 0;">
+                 <i class="fas fa-lock premium"></i> WalletKu.biz.id | Upgrade Premium
+                </p>
+                </div>
             </div>
         </div>
     </div>
@@ -142,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fungsi Cetak Nota Universal
     function cetakNota(nota) {
         // Buat jendela cetak baru
-        const jendelaCetak = window.open('', '_blank', 'width=400,height=600');
+        const jendelaCetak = window.open('', '_blank', 'width=800,height=600');
         
         // Pastikan nota valid
         if (!nota) {

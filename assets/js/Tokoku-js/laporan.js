@@ -136,12 +136,18 @@ document.addEventListener('DOMContentLoaded', () => {
             <p style="font-size: 0.7rem; color: #6c757d; margin-bottom: 5px;">
                 ${pengaturanToko.catatanKakiStruk || 'Terima Kasih'}
             </p>
-            <p class="small mb-0 premium" style="color: #4a90e2; font-weight: 500; font-size: 0.7rem;">
+            
+            <div class="premium2">
+            <p class="small mb-0 premium2" style="color: #4a90e2; font-weight: 500; font-size: 0.7rem;">
                     <i class="fas fa-lock"></i> by: walletku.biz.id
                 </p>
-                <p class="small mb-0 premium" style="color: #4a90e2; font-weight: 500; font-size: 0.7rem;">
-                    <i class="fas fa-arrow-alt-circle-up"></i> Mulai berlangganan
+            </div>
+            <div class="premium2">
+                <p style="font-size: 0.7rem; color: #4a90e2; font-weight: 500; margin: 0;"  class="premium2">
+                <i class="fas fa-lock" ></i> WalletKu.biz.id | Upgrade Premium
                 </p>
+            </div>
+
         </div>
     </div>
 </div>
