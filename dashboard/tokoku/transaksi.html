@@ -5,13 +5,16 @@
     <meta charset="utf-8">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>WalletKu - Mulai atur keuangan mu | beta test</title>
-    <meta name="twitter:image" content="../../assets/img/SEO/og1@2x.png">
+    <title>WalletKu - Mulai atur keuangan mu</title>
+    <link rel="canonical" href="https://walletku.biz.id/dashboard/tokoku/transaksi.html">
+    <meta property="og:url" content="https://walletku.biz.id/dashboard/tokoku/transaksi.html">
     <meta property="og:type" content="website">
-    <meta name="twitter:title" content="WalletKu - Mulai atur keuangan mu | beta test">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:description" content="Mulai mengelola pemasukan dan pengeluaran-mu dengan mudah.">
-    <meta name="description" content="Mulai mengelola pemasukan dan pengeluaran-mu dengan mudah.">
-    <meta property="og:image" content="../../assets/img/SEO/og1@2x.png">
+    <meta name="twitter:title" content="WalletKu - Mulai atur keuangan mu | beta test">
+    <meta name="twitter:image" content="https://walletku.biz.id/assets/img/SEO/og1@2x.png">
+    <meta name="description" content="Mulai mengelola pemasukan dan pengeluaran-mu dengan mudah. dengan fitur backup export dan import">
+    <meta property="og:image" content="https://walletku.biz.id/assets/img/SEO/og1@2x.png">
     <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.png">
     <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.png" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.png">
@@ -31,6 +34,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 
 <body>
@@ -51,12 +55,13 @@
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="item.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-box me-2"></i> Produk</a></li>
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="laporan.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-chart-bar me-2"></i> Laporan</a></li>
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="toko.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-store me-2"></i> Profile TokoKu</a></li>
+                    <li class="nav-item pulse animated infinite" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="../index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent" rel="prev"><i class="fas fa-wallet me-2"></i> WalletKu</a></li>
                 </ul>
             </div>
             <div class="d-flex flex-column" style="width: 100%;"><input class="d-none d-flex" type="file" id="fileImport" style="font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-radius: 16px;"></div>
             <div>
                 <ul class="nav d-flex justify-content-between">
-                    <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #650000;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border: 2px solid rgb(171,5,5) ;"><a class="nav-link" aria-current="page" href="../../index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" onclick="localStorage.removeItem(&#39;userData&#39;)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-logout-2 me-2">
+                    <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #650000;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border: 2px solid rgb(171,5,5) ;"><a class="nav-link" aria-current="page" href="../../index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" onclick="localStorage.removeItem(&#39;userData&#39;)" rel="prev"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-logout-2 me-2">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <path d="M10 8v-2a2 2 0 0 1 2 -2h7a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-2"></path>
                                 <path d="M15 12h-12l3 -3"></path>
