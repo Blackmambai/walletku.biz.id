@@ -39,7 +39,7 @@
     <script src="https://apis.google.com/js/api.js" async defer></script>
 </head>
 
-<body>
+<body id="page-top">
     <div class="offcanvas offcanvas-start bg-body" tabindex="-1" id="offcanvas-menu" style="border-top-right-radius: 16px;border-bottom-right-radius: 16px;box-shadow: 40px 0px 20px 0px rgba(0,0,0,0.11);width: 290px;height: auto;">
         <div class="offcanvas-header justify-content-between mb-4 topbar" style="padding-left: 22px;"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="dashboard.html" style="height: auto;">
                 <div class="bounce animated infinite sidebar-brand-icon rotate-n-15"><i class="fas fa-store text-primary" style="font-size: 23px;"></i></div>
@@ -58,277 +58,7 @@
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="laporan.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-chart-bar me-2"></i> Laporan</a></li>
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="toko.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-store me-2"></i> Profile TokoKu</a></li>
                     <li class="nav-item pulse animated infinite" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="../index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent" rel="prev"><i class="fas fa-wallet me-2"></i> WalletKu</a></li>
-                </ul><h1>Backup & Restore Data Kasir</h1>
-
-    <div id="auth-status">Memuat status autentikasi...</div>
-    <button id="authorize_button" style="display: none;">Login & Authorize Google Drive</button>
-    <button id="signout_button" style="display: none;">Logout Google</button>
-
-    <hr>
-
-    <h6>Opsi Google Drive</h6>
-    <button id="btnBackupGoogleDrive" style="display: none;">Backup ke Google Drive</button>
-    <button id="btnRestoreGoogleDrive" style="display: none;">Restore dari Google Drive</button>
-
-<script>
-        // --- Konfigurasi Kredensial dan API ---
-        const CLIENT_ID = '428814807215-d0fd7qsjrqigukppun4nlvptoh1pm6k4.apps.googleusercontent.com';
-        const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
-        const SCOPES = 'https://www.googleapis.com/auth/drive.appfolder';
-        const BACKUP_FILE_NAME = 'aplikasi_kasir_backup.json';
-
-        // --- Variabel Status & Elemen DOM ---
-        let tokenClient;
-        let gapiInited = false;
-        let gisInited = false;
-
-        const authorizeButton = document.getElementById('authorize_button');
-        const signoutButton = document.getElementById('signout_button');
-        const backupButtonGDrive = document.getElementById('btnBackupGoogleDrive');
-        const restoreButtonGDrive = document.getElementById('btnRestoreGoogleDrive');
-        const authStatusDiv = document.getElementById('auth-status');
-
-        // --- Fungsi Inisialisasi GAPI & GIS ---
-        function gapiLoaded() {
-            gapi.load('client', initializeGapiClient);
-        }
-
-        function gisLoaded() {
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: CLIENT_ID,
-                scope: SCOPES,
-                callback: tokenResponse => {
-                    if (tokenResponse && tokenResponse.access_token) {
-                        if (gapiInited) {
-                            loadDriveApi();
-                        } else {
-                           authStatusDiv.innerText = 'Menunggu Google API Client siap...';
-                        }
-                        updateUIBasedOnAuthState(true);
-                    } else {
-                        alert('Gagal mendapatkan izin Google Drive.');
-                        updateUIBasedOnAuthState(false);
-                    }
-                },
-                error_callback: (error) => {
-                    if (error && error.type === 'popup_closed') {
-                        alert('Popup Google Sign-In diblokir atau ditutup.');
-                    } else {
-                        alert('Terjadi kesalahan saat otorisasi Google.');
-                    }
-                    updateUIBasedOnAuthState(false);
-                }
-            });
-            gisInited = true;
-            maybeEnableAuthButton();
-        }
-
-        async function initializeGapiClient() {
-            try {
-                await gapi.client.init({
-                    discoveryDocs: DISCOVERY_DOCS,
-                });
-                gapiInited = true;
-                if (gapi.client.getToken() && !gapi.client.drive) {
-                    await loadDriveApi();
-                }
-                maybeEnableAuthButton();
-                updateUIBasedOnAuthState(!!gapi.client.getToken());
-
-            } catch (error) {
-                authStatusDiv.innerText = 'Gagal memuat Google API Client.';
-                updateUIBasedOnAuthState(false);
-            }
-        }
-
-        function maybeEnableAuthButton() {
-            if (gapiInited && gisInited && !gapi.client.getToken()) {
-                 authorizeButton.style.display = 'block';
-                 authStatusDiv.innerText = 'Siap untuk Login/Authorize';
-            }
-        }
-
-        // --- Fungsi Autentikasi & Otorisasi ---
-        authorizeButton.onclick = function handleAuthClick() {
-             authStatusDiv.innerText = 'Meminta izin Google...';
-            if (!tokenClient) {
-                 alert("Komponen Google Sign-In belum siap.");
-                 return;
-            }
-
-            if (gapi.client.getToken() === null) {
-                tokenClient.requestAccessToken({ prompt: 'consent' });
-            } else {
-                tokenClient.requestAccessToken({ prompt: '' });
-            }
-        };
-
-        signoutButton.onclick = function handleSignoutClick() {
-            const token = gapi.client.getToken();
-            if (token !== null) {
-                google.accounts.oauth2.revoke(token.access_token, () => {
-                    gapi.client.setToken(null);
-                    updateUIBasedOnAuthState(false);
-                    authStatusDiv.innerText = 'Anda telah logout.';
-                });
-            }
-        };
-
-        async function loadDriveApi() {
-            if (!gapi.client) return;
-
-             if (gapi.client.drive) {
-                updateUIBasedOnAuthState(true);
-                return;
-            }
-
-            try {
-                await gapi.client.load('drive', 'v3');
-                updateUIBasedOnAuthState(true);
-            } catch(error) {
-                 alert('Gagal memuat Google Drive API.');
-                 updateUIBasedOnAuthState(!!gapi.client.getToken());
-                 authStatusDiv.innerText = 'Gagal memuat Drive API. Coba login ulang.';
-            }
-        }
-
-         function updateUIBasedOnAuthState(isAuthorized) {
-            const driveApiReady = isAuthorized && gapi.client && gapi.client.drive;
-
-            if (driveApiReady) {
-                authStatusDiv.innerText = 'Login Berhasil & Drive API Siap.';
-                authorizeButton.style.display = 'none';
-                signoutButton.style.display = 'block';
-                backupButtonGDrive.style.display = 'inline-block';
-                restoreButtonGDrive.style.display = 'inline-block';
-            } else if (isAuthorized && gapiInited) {
-                 authStatusDiv.innerText = 'Login berhasil, memuat Drive API...';
-                 authorizeButton.style.display = 'none';
-                 signoutButton.style.display = 'block';
-                 backupButtonGDrive.style.display = 'none';
-                 restoreButtonGDrive.style.display = 'none';
-            }
-             else {
-                authStatusDiv.innerText = (gapiInited && gisInited) ? 'Harap Login dengan Google' : 'Memuat komponen Google...';
-                authorizeButton.style.display = (gapiInited && gisInited) ? 'inline-block' : 'none';
-                signoutButton.style.display = 'none';
-                backupButtonGDrive.style.display = 'none';
-                restoreButtonGDrive.style.display = 'none';
-            }
-        }
-
-        // --- Fungsi Backup & Restore Google Drive ---
-        async function findBackupFileId() {
-             if (!gapi.client || !gapi.client.drive) {
-                alert("Google Drive API belum siap.");
-                return null;
-            }
-            try {
-                const response = await gapi.client.drive.files.list({
-                    spaces: 'appDataFolder',
-                    fields: 'files(id, name)',
-                    q: `name='${BACKUP_FILE_NAME}' and trashed=false`
-                });
-
-                return response.result.files?.[0]?.id || null;
-            } catch (error) {
-                alert(`Gagal mencari file backup: ${error.result?.error?.message || error.message}`);
-                return null;
-            }
-        }
-
-        backupButtonGDrive.onclick = async function backupToGoogleDrive() {
-            if (!gapi.client || !gapi.client.drive) return;
-
-            backupButtonGDrive.disabled = true;
-            backupButtonGDrive.innerText = 'Membackup...';
-            authStatusDiv.innerText = 'Sedang membackup data...';
-
-            const dataToBackup = {
-                produk: JSON.parse(localStorage.getItem('produk') || '[]',
-                nota: JSON.parse(localStorage.getItem('nota') || '[]',
-                pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}',
-                backupTimestamp: new Date().toISOString()
-            };
-            
-            try {
-                const fileId = await findBackupFileId();
-                const metadata = {
-                    name: BACKUP_FILE_NAME,
-                    mimeType: 'application/json',
-                    ...(!fileId && {parents: ['appDataFolder']})
-                };
-
-                const form = new FormData();
-                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                form.append('file', new Blob([JSON.stringify(dataToBackup)], { type: 'application/json' }));
-
-                const endpoint = fileId 
-                    ? `/upload/drive/v3/files/${fileId}?uploadType=multipart`
-                    : '/upload/drive/v3/files?uploadType=multipart';
-
-                const response = await gapi.client.request({
-                    path: endpoint,
-                    method: fileId ? 'PATCH' : 'POST',
-                    body: form
-                });
-
-                if (response.status === 200) {
-                     alert('Backup ke Google Drive berhasil!');
-                     authStatusDiv.innerText = 'Backup berhasil!';
-                }
-            } catch (error) {
-                alert(`Gagal backup: ${error.result?.error?.message || error.message}`);
-                authStatusDiv.innerText = 'Error saat backup.';
-            } finally {
-                backupButtonGDrive.disabled = false;
-                backupButtonGDrive.innerText = 'Backup ke Google Drive';
-                updateUIBasedOnAuthState(true);
-            }
-        };
-
-        restoreButtonGDrive.onclick = async function restoreFromGoogleDrive() {
-            if (!gapi.client || !gapi.client.drive) return;
-            if (!confirm("PERINGATAN: Ini akan menimpa data lokal Anda!")) return;
-
-            restoreButtonGDrive.disabled = true;
-            authStatusDiv.innerText = 'Mencari file backup...';
-
-            try {
-                const fileId = await findBackupFileId();
-                if (!fileId) {
-                    alert("File backup tidak ditemukan.");
-                    return;
-                }
-
-                const response = await gapi.client.drive.files.get({
-                    fileId: fileId,
-                    alt: 'media'
-                });
-
-                const data = JSON.parse(response.body);
-                if (data) {
-                    localStorage.setItem('produk', JSON.stringify(data.produk));
-                    localStorage.setItem('nota', JSON.stringify(data.nota));
-                    localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
-                    alert('Restore berhasil! Halaman akan dimuat ulang.');
-                    location.reload();
-                }
-            } catch (error) {
-                alert(`Gagal restore: ${error.result?.error?.message || error.message}`);
-            } finally {
-                restoreButtonGDrive.disabled = false;
-                updateUIBasedOnAuthState(true);
-            }
-        };
-
-        // --- Inisialisasi Awal ---
-        window.onload = () => {
-            if (typeof gapi !== 'undefined') gapiLoaded();
-            if (typeof google !== 'undefined' && google.accounts) gisLoaded();
-        };
-</script>
-
+                </ul>
             </div>
             <div class="d-flex flex-column" style="width: 100%;"><input class="d-none d-flex" type="file" id="fileImport" style="font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-radius: 16px;"></div>
             <div>
@@ -609,6 +339,14 @@
                     <div class="d-flex justify-content-between align-items-center pt-3">
                         <p class="mb-0" style="font-family: Nunito, sans-serif;color: var(--text-color);font-weight: bold;">Copyright © 2025 WalletKu.biz.id</p>
                     </div>
+                </div>
+                <div class="d-flex justify-content-between justify-content-lg-center" style="z-index: 500;bottom: -1px;position: fixed;">
+                    <div class="container justify-content-between" style="margin: 0px;padding: 0px;width: 100vw;max-width: 100%;">
+                        <div class="row justify-content-between" style="margin: 0px;width: 100%;">
+                            <div class="col" style="padding: 0px;width: 100%;background: #4361ee;border-top-left-radius: 16px;overflow: hidden;"><a class="btn btn-primary d-lg-flex justify-content-lg-center align-items-lg-center" role="button" data-bss-hover-animate="rubberBand" style="width: 100%;" href="https://walletku.biz.id/dashboard/" target="_parent"><i class="fas fa-wallet" style="margin-right: 8px;"></i>&nbsp;WalletKu</a></div>
+                            <div class="col" style="padding: 0px;width: 100%;background: #4361ee;border-top-right-radius: 16px;overflow: hidden;"><a class="btn btn-primary d-lg-flex justify-content-lg-center align-items-lg-center" role="button" data-bss-hover-animate="rubberBand" style="width: 100%;" target="_parent" href="https://walletku.biz.id/dashboard/tokoku/"><i class="fas fa-store" style="margin-right: 8px;"></i> TokoKu</a></div>
+                        </div>
+                    </div><a class="border rounded d-inline scroll-to-top" href="#page-top" style="margin-bottom: 36px;"><i class="fas fa-angle-up"></i></a>
                 </div>
             </footer>
         </div>
