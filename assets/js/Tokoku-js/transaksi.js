@@ -206,17 +206,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         daftarProduk.innerHTML = produkTersedia.map(produk => `
             <div class="col-md-4" style="padding: 5px;margin-bottom: 16px;">
-    <div class="card summary-card paddingAll produk01" style="padding: 10px;">
-        <div class="card-body" style="padding: 0px;">
-            <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.webp'}" 
-             class="card-img-top" 
-             alt="${produk.namaProduk}"
-             style="border-radius: 16px 16px 0 0; object-fit: cover;height: 200px;margin-bottom: 16px; >
-            <h5 class="card-title" style="font-family: Nunito, sans-serif;font-size: 20px;font-weight: bold;">${produk.namaProduk}</h5>
-            <p class="card-text" style="font-family: Nunito, sans-serif;font-size: 16px;color: rgb(43,43,44);font-weight: bold;"> Harga: Rp ${produk.hargaJual.toLocaleString()}<br /> Stok: ${produk.stokProduk} </p><button class="btn btn-primary text-nowrap text-start d-flex d-xxl-flex justify-content-center align-items-center tambah-produk btnproduk1" data-nama="${produk.namaProduk}" data-harga="${produk.hargaJual}" data-stok="${produk.stokProduk}"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i> Tambah </button>
-        </div>
-    </div>
-</div>
+                <div class="card summary-card paddingAll produk01" style="padding: 10px;">
+                    <div class="card-body" style="padding: 0px;">
+                        <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.webp'}" 
+                             class="card-img-top" 
+                             alt="${produk.namaProduk}"
+                             style="border-radius: 16px 16px 0 0; object-fit: cover; height: 200px; margin-bottom: 16px;">
+                        <h5 class="card-title" style="font-family: Nunito, sans-serif;font-size: 20px;font-weight: bold;">${produk.namaProduk}</h5>
+                        <p class="card-text" style="font-family: Nunito, sans-serif;font-size: 16px;color: rgb(43,43,44);font-weight: bold;"> 
+                            Harga: Rp ${produk.hargaJual.toLocaleString()}<br /> 
+                            Stok: ${produk.stokProduk} 
+                        </p>
+                        <button class="btn btn-primary text-nowrap text-start d-flex d-xxl-flex justify-content-center align-items-center tambah-produk btnproduk1" 
+                                data-nama="${produk.namaProduk}" 
+                                data-harga="${produk.hargaJual}" 
+                                data-stok="${produk.stokProduk}">
+                            <i class="fas fa-plus-circle" style="margin-right: 10px;"></i> Tambah 
+                        </button>
+                    </div>
+                </div>
+            </div>
         `).join('');
 
         // Tambahkan event listener untuk tombol tambah
@@ -430,6 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fileImport').click();
     });
 
+    // Perbaikan 3: Import data dengan pemanggilan fungsi yang benar
     document.getElementById('fileImport').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -442,9 +452,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('nota', JSON.stringify(data.nota));
                 localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
                 alert('Data berhasil diimpor!');
-                muatNota();
+                muatProduk(); // Diubah dari muatNota() ke muatProduk()
             } catch (error) {
-                alert('file anda telah di backup dengan aman! silahkan refresh halaman');
+                alert('Silahkan Refresh!');
             }
         };
         reader.readAsText(file);

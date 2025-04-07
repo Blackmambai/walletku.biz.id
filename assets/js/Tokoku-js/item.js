@@ -225,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fileImport').click();
     });
 
+    // Perbaikan 3: Import data dengan pemanggilan fungsi yang benar
     document.getElementById('fileImport').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -237,9 +238,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('nota', JSON.stringify(data.nota));
                 localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
                 alert('Data berhasil diimpor!');
-                muatNota();
+                muatProduk(); // Diubah dari muatNota() ke muatProduk()
             } catch (error) {
-                alert('file anda telah di backup dengan aman! silahkan refresh halaman');
+                alert('Silahkan Refresh!');
             }
         };
         reader.readAsText(file);
