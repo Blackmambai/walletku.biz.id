@@ -12,146 +12,143 @@ document.addEventListener('DOMContentLoaded', () => {
     let keranjangItems = [];
     let produkList = [];
 
-    // Fungsi Buat Struk dengan Fitur Cetak yang Diperbaiki
+    // Fungsi Buat Struk
     function buatStruk(nota) {
         const pengaturanToko = JSON.parse(localStorage.getItem('pengaturanToko') || '{}');
         
         return `
             <div id="strukCetak" class="container-fluid p-3" style="
-    max-width: 400px; 
-    margin: 0 auto; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 2px solid #4a90e2;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9f5ff 100%);
-">
-    <!-- Watermark -->
-    <div style="
-        position: absolute;
-        opacity: 0.1;
-        font-size: 120px;
-        font-weight: bold;
-        color: #4a90e2;
-        transform: rotate(-30deg);
-        top: 30%;
-        left: 10%;
-        z-index: 0;
-        pointer-events: none;
-    ">
-        walletku.biz.id
-    </div>
-    
-    <div class="position-relative" style="z-index: 1;">
-        <!-- Header -->
-        <div class="text-center mb-3">
-            ${pengaturanToko.logoToko ? 
-                `<img src="${pengaturanToko.logoToko}" 
-                       class="img-fluid mb-2" 
-                       style="max-height: 80px;">` 
-                : ''
-            }
-            <h3 class="mb-1" style="color: #2c3e50; font-weight: bold;">
-                ${pengaturanToko.namaToko || 'TOKO SAYA'}
-            </h3>
-            <p class="mb-1 text-muted small">
-                <i class="fas fa-map-marker-alt"></i> ${pengaturanToko.alamatToko || 'Alamat Tidak Tersedia'}
-            </p>
-            <p class="mb-2 text-muted small">
-                <i class="fab fa-whatsapp"></i> ${pengaturanToko.nomorWAToko || '-'}
-            </p>
-            <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
-        </div>
-        
-        <!-- Customer Info -->
-        <div class="mb-3">
-            <div class="d-flex justify-content-between mb-1">
-                <span class="text-muted">Nama:</span>
-                <span style="font-weight: 500;">${nota.namaPelanggan || 'Pelanggan Umum'}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-1">
-                <span class="text-muted">Tanggal:</span>
-                <span style="font-weight: 500;">${nota.tanggal}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">Metode:</span>
-                <span class="badge bg-primary">${nota.metodePembayaran}</span>
-            </div>
-            <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
-        </div>
-        
-        <!-- Product List -->
-        <div class="mb-3">
-            <table class="table table-sm">
-                <thead>
-                    <tr style="background-color: #e9f5ff;">
-                        <th class="ps-0" style="color: #2c3e50;">Produk</th>
-                        <th class="text-end pe-0" style="color: #2c3e50;">Jumlah</th>
-                        <th class="text-end pe-0" style="color: #2c3e50;">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${nota.produk.map(item => `
-                        <tr>
-                            <td class="ps-0">${item.nama}</td>
-                            <td class="text-end pe-0">${item.jumlah} x ${item.harga.toLocaleString()}</td>
-                            <td class="text-end pe-0" style="font-weight: 500;">${(item.harga * item.jumlah).toLocaleString()}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-            
-            <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
-            
-            <!-- Summary -->
-            <div class="mb-2">
-                <div class="d-flex justify-content-between">
-                    <span class="text-muted">Total:</span>
-                    <span class="fw-bold" style="color: #2c3e50;">Rp ${nota.totalHarga.toLocaleString()}</span>
+                max-width: 400px; 
+                margin: 0 auto; 
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                border: 2px solid #4a90e2;
+                border-radius: 10px;
+                box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+                position: relative;
+                overflow: hidden;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9f5ff 100%);
+            ">
+                <!-- Watermark -->
+                <div style="
+                    position: absolute;
+                    opacity: 0.1;
+                    font-size: 120px;
+                    font-weight: bold;
+                    color: #4a90e2;
+                    transform: rotate(-30deg);
+                    top: 30%;
+                    left: 10%;
+                    z-index: 0;
+                    pointer-events: none;
+                ">
+                    walletku.biz.id
                 </div>
-                <div class="d-flex justify-content-between">
-                    <span class="text-muted">Bayar:</span>
-                    <span class="fw-bold" style="color: #27ae60;">Rp ${nota.uangDiterima.toLocaleString()}</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span class="text-muted">Kembali:</span>
-                    <span class="fw-bold" style="color: #e74c3c;">Rp ${nota.kembalian.toLocaleString()}</span>
-                </div>
-            </div>
-            
-            <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
-            
-            <!-- Footer -->
-            <div class="text-center mt-3">
-                <p class="small text-muted mb-1">
-                    ${pengaturanToko.catatanKakiStruk || 'Terima Kasih Telah Berbelanja'}
                 
-             <div class="premium2">      
-                <p class="premium" style="font-size: 0.7rem; color: #4a90e2; font-weight: 500; margin: 0;">
-                 <i class="fas fa-lock premium"></i> WalletKu.biz.id | Upgrade Premium
-                </p>
+                <div class="position-relative" style="z-index: 1;">
+                    <!-- Header -->
+                    <div class="text-center mb-3">
+                        ${pengaturanToko.logoToko ? 
+                            `<img src="${pengaturanToko.logoToko}" 
+                                   class="img-fluid mb-2" 
+                                   style="max-height: 80px;">` 
+                            : ''
+                        }
+                        <h3 class="mb-1" style="color: #2c3e50; font-weight: bold;">
+                            ${pengaturanToko.namaToko || 'TOKO SAYA'}
+                        </h3>
+                        <p class="mb-1 text-muted small">
+                            <i class="fas fa-map-marker-alt"></i> ${pengaturanToko.alamatToko || 'Alamat Tidak Tersedia'}
+                        </p>
+                        <p class="mb-2 text-muted small">
+                            <i class="fab fa-whatsapp"></i> ${pengaturanToko.nomorWAToko || '-'}
+                        </p>
+                        <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
+                    </div>
+                    
+                    <!-- Customer Info -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Nama:</span>
+                            <span style="font-weight: 500;">${nota.namaPelanggan || 'Pelanggan Umum'}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Tanggal:</span>
+                            <span style="font-weight: 500;">${nota.tanggal}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Metode:</span>
+                            <span class="badge bg-primary">${nota.metodePembayaran}</span>
+                        </div>
+                        <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
+                    </div>
+                    
+                    <!-- Product List -->
+                    <div class="mb-3">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr style="background-color: #e9f5ff;">
+                                    <th class="ps-0" style="color: #2c3e50;">Produk</th>
+                                    <th class="text-end pe-0" style="color: #2c3e50;">Jumlah</th>
+                                    <th class="text-end pe-0" style="color: #2c3e50;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${nota.produk.map(item => `
+                                    <tr>
+                                        <td class="ps-0">${item.nama}</td>
+                                        <td class="text-end pe-0">${item.jumlah} x ${item.harga.toLocaleString()}</td>
+                                        <td class="text-end pe-0" style="font-weight: 500;">${(item.harga * item.jumlah).toLocaleString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        
+                        <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
+                        
+                        <!-- Summary -->
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Total:</span>
+                                <span class="fw-bold" style="color: #2c3e50;">Rp ${nota.totalHarga.toLocaleString()}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Bayar:</span>
+                                <span class="fw-bold" style="color: #27ae60;">Rp ${nota.uangDiterima.toLocaleString()}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Kembali:</span>
+                                <span class="fw-bold" style="color: #e74c3c;">Rp ${nota.kembalian.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        
+                        <hr style="border-top: 2px dashed #4a90e2; opacity: 0.7;">
+                        
+                        <!-- Footer -->
+                        <div class="text-center mt-3">
+                            <p class="small text-muted mb-1">
+                                ${pengaturanToko.catatanKakiStruk || 'Terima Kasih Telah Berbelanja'}
+                            </p>
+                            <div class="premium2">      
+                                <p class="premium" style="font-size: 0.7rem; color: #4a90e2; font-weight: 500; margin: 0;">
+                                    <i class="fas fa-lock premium"></i> WalletKu.biz.id | Upgrade Premium
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
         `;
     }
 
-    // Fungsi Cetak Nota Universal
+    // Fungsi Cetak Nota
     function cetakNota(nota) {
-        // Buat jendela cetak baru
         const jendelaCetak = window.open('', '_blank', 'width=800,height=600');
         
-        // Pastikan nota valid
         if (!nota) {
             alert('Nota tidak valid');
             return;
         }
 
-        // Tulis konten struk ke jendela cetak
         jendelaCetak.document.open();
         jendelaCetak.document.write(`
             <html>
@@ -205,26 +202,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         daftarProduk.innerHTML = produkTersedia.map(produk => `
             <div class="col-md-4" style="padding: 5px;margin-bottom: 16px;">
-    <div class="card summary-card paddingAll produk01" style="padding: 10px;">
-        <div class="card-body" style="padding: 0px;">
-            <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.webp'}" 
-             class="card-img-top" 
-             alt="${produk.namaProduk}"
-             style="border-radius: 16px 16px 0 0; object-fit: cover;height: 200px;margin-bottom: 16px; >
-            <h5 class="card-title" style="font-family: Nunito, sans-serif;font-size: 20px;font-weight: bold;">${produk.namaProduk}</h5>
-            <p class="card-text" style="font-family: Nunito, sans-serif;font-size: 16px;color: rgb(43,43,44);font-weight: bold;"> Harga: Rp ${produk.hargaJual.toLocaleString()}<br /> Stok: ${produk.stokProduk} </p><button class="btn btn-primary text-nowrap text-start d-flex d-xxl-flex justify-content-center align-items-center tambah-produk btnproduk1" data-nama="${produk.namaProduk}" data-harga="${produk.hargaJual}" data-stok="${produk.stokProduk}" data-id="${produk.id || produk.namaProduk}"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i> Tambah </button>
-        </div>
-    </div>
-</div>
+                <div class="card summary-card paddingAll produk01" style="padding: 10px;">
+                    <div class="card-body" style="padding: 0px;">
+                        <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.webp'}" 
+                         class="card-img-top" 
+                         alt="${produk.namaProduk}"
+                         style="border-radius: 16px 16px 0 0; object-fit: cover;height: 200px;margin-bottom: 16px;">
+                        <h5 class="card-title" style="font-family: Nunito, sans-serif;font-size: 20px;font-weight: bold;">${produk.namaProduk}</h5>
+                        <p class="card-text" style="font-family: Nunito, sans-serif;font-size: 16px;color: rgb(43,43,44);font-weight: bold;"> 
+                            Harga: Rp ${produk.hargaJual.toLocaleString()}<br /> 
+                            Stok: ${produk.stokProduk} 
+                        </p>
+                        <button class="btn btn-primary text-nowrap text-start d-flex d-xxl-flex justify-content-center align-items-center tambah-produk btnproduk1" 
+                            data-nama="${produk.namaProduk}" 
+                            data-harga="${produk.hargaJual}" 
+                            data-stok="${produk.stokProduk}">
+                            <i class="fas fa-plus-circle" style="margin-right: 10px;"></i> Tambah 
+                        </button>
+                    </div>
+                </div>
+            </div>
         `).join('');
 
-        // Tambahkan event listener untuk tombol tambah
         document.querySelectorAll('.tambah-produk').forEach(btn => {
             btn.addEventListener('click', tambahKeKeranjang);
         });
     }
 
-    // Fungsi untuk memperbarui stok produk di localStorage
+    // Update Stok Produk
     function updateProductStock(productName, changeAmount) {
         const produkList = JSON.parse(localStorage.getItem('produk') || '[]');
         const productIndex = produkList.findIndex(p => p.namaProduk === productName);
@@ -232,8 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (productIndex !== -1) {
             produkList[productIndex].stokProduk += changeAmount;
             localStorage.setItem('produk', JSON.stringify(produkList));
-            
-            // Perbarui tampilan produk
             muatProduk(cariProduk.value);
         }
     }
@@ -249,7 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (itemExist) {
             if (itemExist.jumlah < stok) {
                 itemExist.jumlah++;
-                // Kurangi stok produk
                 updateProductStock(nama, -1);
             } else {
                 alert('Stok produk tidak mencukupi');
@@ -261,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 harga,
                 jumlah: 1
             });
-            // Kurangi stok produk
             updateProductStock(nama, -1);
         }
 
@@ -270,6 +271,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update Keranjang
     function updateKeranjang() {
+        if (keranjangItems.length === 0) {
+            keranjang.innerHTML = '<li class="list-group-item text-center text-muted">Keranjang kosong</li>';
+            totalHarga.textContent = 'Rp 0';
+            return;
+        }
+
         keranjang.innerHTML = keranjangItems.map((item, index) => `
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
@@ -287,11 +294,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </li>
         `).join('');
 
-        // Hitung total harga
         const total = keranjangItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
         totalHarga.textContent = `Rp ${total.toLocaleString()}`;
 
-        // Event listener kurang dan hapus item
         document.querySelectorAll('.kurang-item').forEach(btn => {
             btn.addEventListener('click', kurangItem);
         });
@@ -308,13 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (keranjangItems[index].jumlah > 1) {
             keranjangItems[index].jumlah--;
-            // Tambahkan kembali stok produk
             updateProductStock(productName, 1);
         } else {
-            // Jika jumlah menjadi 0, hapus item
             const jumlahItem = keranjangItems[index].jumlah;
             keranjangItems.splice(index, 1);
-            // Tambahkan kembali stok produk
             updateProductStock(productName, jumlahItem);
         }
         updateKeranjang();
@@ -327,31 +329,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const jumlahItem = keranjangItems[index].jumlah;
         
         keranjangItems.splice(index, 1);
-        // Tambahkan kembali stok produk
         updateProductStock(productName, jumlahItem);
         updateKeranjang();
     }
-
-    // Tambah Produk Cepat
-    formTambahProdukCepat.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const produk = {
-            namaProduk: document.getElementById('namaProdukBaru').value,
-            hargaJual: parseFloat(document.getElementById('hargaProdukBaru').value),
-            stokProduk: parseInt(document.getElementById('stokProdukBaru').value)
-        };
-
-        const produkList = JSON.parse(localStorage.getItem('produk') || '[]');
-        produkList.push(produk);
-        localStorage.setItem('produk', JSON.stringify(produkList));
-
-        // Reset form dan tutup modal
-        formTambahProdukCepat.reset();
-        bootstrap.Modal.getInstance(document.getElementById('modalTambahProduk')).hide();
-        
-        // Muat ulang produk
-        muatProduk();
-    });
 
     // Proses Pembayaran
     btnProsesPembayaran.addEventListener('click', () => {
@@ -379,7 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Simpan nota
         const nota = JSON.parse(localStorage.getItem('nota') || '[]');
         const notaBaru = {
             tanggal: new Date().toLocaleDateString('id-ID', { 
@@ -399,24 +378,21 @@ document.addEventListener('DOMContentLoaded', () => {
         nota.push(notaBaru);
         localStorage.setItem('nota', JSON.stringify(nota));
 
-        // Tampilkan struk
         strukPembayaran.innerHTML = buatStruk(notaBaru);
         const modalStruk = new bootstrap.Modal(document.getElementById('modalStruk'));
         modalStruk.show();
 
-        // Tambahkan event listener untuk cetak
         btnCetakNota.onclick = () => {
             cetakNota(notaBaru);
+            // Kosongkan keranjang setelah cetak
+            keranjangItems = [];
+            updateKeranjang();
+            muatProduk();
         };
 
-        // Reset keranjang dan form
-        keranjangItems = [];
-        updateKeranjang();
+        // Reset form
         formPembayaran.reset();
         bootstrap.Modal.getInstance(document.getElementById('modalPembayaran')).hide();
-        
-        // Perbarui tampilan produk setelah pembayaran
-        muatProduk();
     });
 
     // Hitung Kembalian
@@ -426,9 +402,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const kembalian = uangDiterima - total;
         document.getElementById('kembalian').value = `Rp ${kembalian.toLocaleString()}`;
     });
-
-    // Muat produk saat halaman pertama kali dimuat
-    muatProduk();
 
     // Pencarian Produk
     cariProduk.addEventListener('input', (e) => {
@@ -473,9 +446,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Data berhasil diimpor!');
                 muatProduk();
             } catch (error) {
-                alert('file anda telah di backup dengan aman! silahkan refresh halaman');
+                alert('Gagal mengimpor data. Format file tidak valid.');
             }
         };
         reader.readAsText(file);
     });
+
+    // Inisialisasi
+    muatProduk();
 });
