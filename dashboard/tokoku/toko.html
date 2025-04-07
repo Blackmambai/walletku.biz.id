@@ -66,22 +66,15 @@
 
     <hr>
 
-    <h2>Opsi Google Drive</h2>
+    <h6>Opsi Google Drive</h6>
     <button id="btnBackupGoogleDrive" style="display: none;">Backup ke Google Drive</button>
     <button id="btnRestoreGoogleDrive" style="display: none;">Restore dari Google Drive</button>
 
-    <hr>
-
-    <h2>Opsi Lokal</h2>
-    <button id="btnBackup">Backup ke File Lokal</button>
-    <input type="file" id="fileImport" style="display: none;" accept=".json">
-    <button id="btnImport">Import dari File Lokal</button>
 <script>
         // --- Konfigurasi Kredensial dan API ---
-        const CLIENT_ID = '428814807215-d0fd7qsjrqigukppun4nlvptoh1pm6k4.apps.googleusercontent.com'; // Client ID Anda
-        // JANGAN PERNAH TARUH CLIENT SECRET DI SINI!
+        const CLIENT_ID = '428814807215-d0fd7qsjrqigukppun4nlvptoh1pm6k4.apps.googleusercontent.com';
         const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
-        const SCOPES = 'https://www.googleapis.com/auth/drive.appfolder'; // Menggunakan AppDataFolder
+        const SCOPES = 'https://www.googleapis.com/auth/drive.appfolder';
         const BACKUP_FILE_NAME = 'aplikasi_kasir_backup.json';
 
         // --- Variabel Status & Elemen DOM ---
@@ -94,13 +87,8 @@
         const backupButtonGDrive = document.getElementById('btnBackupGoogleDrive');
         const restoreButtonGDrive = document.getElementById('btnRestoreGoogleDrive');
         const authStatusDiv = document.getElementById('auth-status');
-        const backupButtonLocal = document.getElementById('btnBackup');
-        const importButtonLocal = document.getElementById('btnImport');
-        const fileImportInput = document.getElementById('fileImport');
-
 
         // --- Fungsi Inisialisasi GAPI & GIS ---
-
         function gapiLoaded() {
             gapi.load('client', initializeGapiClient);
         }
@@ -111,28 +99,20 @@
                 scope: SCOPES,
                 callback: tokenResponse => {
                     if (tokenResponse && tokenResponse.access_token) {
-                        console.log("Otorisasi berhasil, token diterima.");
-                        // GAPI mungkin belum siap saat token pertama kali diterima,
-                        // pastikan gapi.client sudah diinisialisasi sebelum menggunakannya.
                         if (gapiInited) {
-                            loadDriveApi(); // Langsung load Drive API jika GAPI sudah siap
+                            loadDriveApi();
                         } else {
-                           // Jika GAPI belum siap, tunggu GAPI init baru load Drive API
-                           // Status akan diupdate di initializeGapiClient nanti
                            authStatusDiv.innerText = 'Menunggu Google API Client siap...';
                         }
-                        updateUIBasedOnAuthState(true); // Update UI sementara
+                        updateUIBasedOnAuthState(true);
                     } else {
-                        console.error("Gagal mendapatkan token akses.", tokenResponse);
                         alert('Gagal mendapatkan izin Google Drive.');
                         updateUIBasedOnAuthState(false);
                     }
                 },
                 error_callback: (error) => {
-                    console.error('GIS Error:', error);
-                    // Cek jika error karena popup diblokir
                     if (error && error.type === 'popup_closed') {
-                        alert('Popup Google Sign-In diblokir atau ditutup. Mohon izinkan popup untuk situs ini dan coba lagi.');
+                        alert('Popup Google Sign-In diblokir atau ditutup.');
                     } else {
                         alert('Terjadi kesalahan saat otorisasi Google.');
                     }
@@ -146,28 +126,22 @@
         async function initializeGapiClient() {
             try {
                 await gapi.client.init({
-                    // apiKey: API_KEY, // Tidak perlu apiKey jika sudah pakai OAuth
                     discoveryDocs: DISCOVERY_DOCS,
                 });
                 gapiInited = true;
-                console.log("GAPI Client Initialized");
-                // Jika token sudah ada (misalnya dari callback GIS yang datang duluan)
-                // dan Drive API belum diload, load sekarang.
                 if (gapi.client.getToken() && !gapi.client.drive) {
                     await loadDriveApi();
                 }
                 maybeEnableAuthButton();
-                updateUIBasedOnAuthState(!!gapi.client.getToken()); // Update UI berdasarkan token yg mungkin sudah ada
+                updateUIBasedOnAuthState(!!gapi.client.getToken());
 
             } catch (error) {
-                console.error('Error initializing GAPI client:', error);
                 authStatusDiv.innerText = 'Gagal memuat Google API Client.';
                 updateUIBasedOnAuthState(false);
             }
         }
 
         function maybeEnableAuthButton() {
-            // Tombol login hanya muncul jika GAPI dan GIS siap DAN user belum login/authorize
             if (gapiInited && gisInited && !gapi.client.getToken()) {
                  authorizeButton.style.display = 'block';
                  authStatusDiv.innerText = 'Siap untuk Login/Authorize';
@@ -175,21 +149,17 @@
         }
 
         // --- Fungsi Autentikasi & Otorisasi ---
-
         authorizeButton.onclick = function handleAuthClick() {
              authStatusDiv.innerText = 'Meminta izin Google...';
             if (!tokenClient) {
-                 console.error("Token client belum siap.");
-                 alert("Komponen Google Sign-In belum siap, silakan coba lagi sesaat.");
+                 alert("Komponen Google Sign-In belum siap.");
                  return;
             }
 
             if (gapi.client.getToken() === null) {
-                // Minta token baru, tampilkan prompt pemilihan akun & izin
                 tokenClient.requestAccessToken({ prompt: 'consent' });
             } else {
-                // Token sudah ada, mungkin hanya perlu refresh (jika diperlukan)
-                tokenClient.requestAccessToken({ prompt: '' }); // Prompt kosong akan coba refresh tanpa interaksi
+                tokenClient.requestAccessToken({ prompt: '' });
             }
         };
 
@@ -197,45 +167,28 @@
             const token = gapi.client.getToken();
             if (token !== null) {
                 google.accounts.oauth2.revoke(token.access_token, () => {
-                    gapi.client.setToken(null); // Hapus token dari gapi client
-                    console.log("User logged out.");
-                    // Reset status GAPI drive API agar perlu diload lagi jika login kembali
-                    if (gapi.client.drive) {
-                         gapi.client.drive = undefined; // Atau cara lain untuk menandai belum siap
-                    }
+                    gapi.client.setToken(null);
                     updateUIBasedOnAuthState(false);
                     authStatusDiv.innerText = 'Anda telah logout.';
                 });
-            } else {
-                updateUIBasedOnAuthState(false); // Jika tidak ada token, pastikan UI sesuai
             }
         };
 
         async function loadDriveApi() {
-            // Cek lagi apakah GAPI client sudah siap
-            if (!gapi.client) {
-                console.error("GAPI client belum diinisialisasi saat mencoba load Drive API.");
-                return;
-            }
-            // Cek apakah Drive API sudah dimuat sebelumnya
+            if (!gapi.client) return;
+
              if (gapi.client.drive) {
-                console.log("Drive API sudah dimuat sebelumnya.");
-                updateUIBasedOnAuthState(true); // Pastikan UI sudah benar
+                updateUIBasedOnAuthState(true);
                 return;
             }
 
             try {
-                console.log("Memuat Drive API v3...");
                 await gapi.client.load('drive', 'v3');
-                console.log("Drive API v3 loaded successfully.");
-                updateUIBasedOnAuthState(true); // Update UI setelah Drive API siap
+                updateUIBasedOnAuthState(true);
             } catch(error) {
-                 console.error("Error loading Drive API: ", error);
-                 alert('Gagal memuat Google Drive API. Fitur backup/restore mungkin tidak berfungsi.');
-                 // Jika gagal load API, anggap user tidak terotorisasi penuh
-                 updateUIBasedOnAuthState(!!gapi.client.getToken()); // Update UI hanya berdasarkan token, bukan API
+                 alert('Gagal memuat Google Drive API.');
+                 updateUIBasedOnAuthState(!!gapi.client.getToken());
                  authStatusDiv.innerText = 'Gagal memuat Drive API. Coba login ulang.';
-
             }
         }
 
@@ -246,32 +199,28 @@
                 authStatusDiv.innerText = 'Login Berhasil & Drive API Siap.';
                 authorizeButton.style.display = 'none';
                 signoutButton.style.display = 'block';
-                backupButtonGDrive.style.display = 'inline-block'; // 'inline-block' agar sejajar
+                backupButtonGDrive.style.display = 'inline-block';
                 restoreButtonGDrive.style.display = 'inline-block';
             } else if (isAuthorized && gapiInited) {
-                 // User sudah login tapi Drive API belum siap / gagal load
                  authStatusDiv.innerText = 'Login berhasil, memuat Drive API...';
                  authorizeButton.style.display = 'none';
-                 signoutButton.style.display = 'block'; // Tombol logout tetap ada
+                 signoutButton.style.display = 'block';
                  backupButtonGDrive.style.display = 'none';
                  restoreButtonGDrive.style.display = 'none';
             }
              else {
-                // Tidak login atau belum init penuh
                 authStatusDiv.innerText = (gapiInited && gisInited) ? 'Harap Login dengan Google' : 'Memuat komponen Google...';
-                authorizeButton.style.display = (gapiInited && gisInited) ? 'inline-block' : 'none'; // Tampilkan hanya jika init selesai
+                authorizeButton.style.display = (gapiInited && gisInited) ? 'inline-block' : 'none';
                 signoutButton.style.display = 'none';
                 backupButtonGDrive.style.display = 'none';
                 restoreButtonGDrive.style.display = 'none';
             }
         }
 
-
-        // --- Fungsi Inti Backup & Restore Google Drive ---
-
+        // --- Fungsi Backup & Restore Google Drive ---
         async function findBackupFileId() {
              if (!gapi.client || !gapi.client.drive) {
-                alert("Google Drive API belum siap. Silakan coba lagi.");
+                alert("Google Drive API belum siap.");
                 return null;
             }
             try {
@@ -281,265 +230,105 @@
                     q: `name='${BACKUP_FILE_NAME}' and trashed=false`
                 });
 
-                if (response.result.files && response.result.files.length > 0) {
-                    console.log("File backup ditemukan:", response.result.files[0]);
-                    return response.result.files[0].id;
-                } else {
-                    console.log("File backup tidak ditemukan di AppDataFolder.");
-                    return null;
-                }
+                return response.result.files?.[0]?.id || null;
             } catch (error) {
-                console.error("Error saat mencari file backup:", error);
-                alert(`Gagal mencari file backup di Google Drive: ${error.result?.error?.message || error.message}`);
+                alert(`Gagal mencari file backup: ${error.result?.error?.message || error.message}`);
                 return null;
             }
         }
 
         backupButtonGDrive.onclick = async function backupToGoogleDrive() {
-            if (!gapi.client || !gapi.client.drive) {
-                 alert("Google Drive API belum siap. Silakan login ulang.");
-                 return;
-            }
+            if (!gapi.client || !gapi.client.drive) return;
 
             backupButtonGDrive.disabled = true;
             backupButtonGDrive.innerText = 'Membackup...';
-            authStatusDiv.innerText = 'Sedang membackup data ke Google Drive...';
+            authStatusDiv.innerText = 'Sedang membackup data...';
 
             const dataToBackup = {
-                produk: JSON.parse(localStorage.getItem('produk') || '[]'),
-                nota: JSON.parse(localStorage.getItem('nota') || '[]'),
-                pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}'),
+                produk: JSON.parse(localStorage.getItem('produk') || '[]',
+                nota: JSON.parse(localStorage.getItem('nota') || '[]',
+                pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}',
                 backupTimestamp: new Date().toISOString()
             };
-            const jsonData = JSON.stringify(dataToBackup);
-            const blobData = new Blob([jsonData], { type: 'application/json' });
-
-            const fileId = await findBackupFileId();
-
-            const metadata = {
-                name: BACKUP_FILE_NAME,
-                mimeType: 'application/json',
-            };
-
-            const form = new FormData();
-
+            
             try {
-                let requestPath;
-                let requestMethod;
+                const fileId = await findBackupFileId();
+                const metadata = {
+                    name: BACKUP_FILE_NAME,
+                    mimeType: 'application/json',
+                    ...(!fileId && {parents: ['appDataFolder']})
+                };
 
-                if (fileId) {
-                    console.log(`Mengupdate file yang ada dengan ID: ${fileId}`);
-                    requestPath = `/upload/drive/v3/files/${fileId}`;
-                    requestMethod = 'PATCH';
-                    // Untuk PATCH, metadata dikirim dalam body juga, tapi hanya field yg diupdate
-                    form.append('metadata', new Blob([JSON.stringify({})], { type: 'application/json' })); // Kosong cukup jika hanya konten berubah
-                    form.append('file', blobData);
-                } else {
-                    console.log("Membuat file backup baru di AppDataFolder.");
-                    requestPath = '/upload/drive/v3/files';
-                    requestMethod = 'POST';
-                    metadata.parents = ['appDataFolder']; // Pastikan disimpan di AppDataFolder
-                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                    form.append('file', blobData);
-                }
+                const form = new FormData();
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', new Blob([JSON.stringify(dataToBackup)], { type: 'application/json' }));
+
+                const endpoint = fileId 
+                    ? `/upload/drive/v3/files/${fileId}?uploadType=multipart`
+                    : '/upload/drive/v3/files?uploadType=multipart';
 
                 const response = await gapi.client.request({
-                    path: requestPath,
-                    method: requestMethod,
-                    params: { uploadType: 'multipart' },
+                    path: endpoint,
+                    method: fileId ? 'PATCH' : 'POST',
                     body: form
                 });
 
-                console.log("Respons upload/update dari Google Drive:", response);
                 if (response.status === 200) {
-                     alert('Backup data ke Google Drive (AppDataFolder) berhasil!');
+                     alert('Backup ke Google Drive berhasil!');
                      authStatusDiv.innerText = 'Backup berhasil!';
-                } else {
-                     alert(`Backup gagal dengan status: ${response.status}. Detail: ${response.body}`);
-                     authStatusDiv.innerText = 'Backup gagal.';
                 }
-
             } catch (error) {
-                console.error("Error saat backup ke Google Drive:", error);
-                alert(`Terjadi kesalahan saat backup: ${error.result?.error?.message || error.message || error}`);
-                 authStatusDiv.innerText = 'Error saat backup.';
+                alert(`Gagal backup: ${error.result?.error?.message || error.message}`);
+                authStatusDiv.innerText = 'Error saat backup.';
             } finally {
                 backupButtonGDrive.disabled = false;
                 backupButtonGDrive.innerText = 'Backup ke Google Drive';
-                 // Kembalikan status normal jika tidak ada error lain
-                if (authStatusDiv.innerText.startsWith('Sedang') || authStatusDiv.innerText.startsWith('Error') || authStatusDiv.innerText.startsWith('Backup gagal')) {
-                     updateUIBasedOnAuthState(true); // Set status kembali ke normal 'Login Berhasil'
-                }
+                updateUIBasedOnAuthState(true);
             }
         };
 
         restoreButtonGDrive.onclick = async function restoreFromGoogleDrive() {
-            if (!gapi.client || !gapi.client.drive) {
-                 alert("Google Drive API belum siap. Silakan login ulang.");
-                 return;
-            }
-            if (!confirm("PERINGATAN: Ini akan menimpa data kasir lokal Anda saat ini dengan data dari Google Drive. Apakah Anda yakin ingin melanjutkan?")) {
-                return;
-            }
+            if (!gapi.client || !gapi.client.drive) return;
+            if (!confirm("PERINGATAN: Ini akan menimpa data lokal Anda!")) return;
 
             restoreButtonGDrive.disabled = true;
-            restoreButtonGDrive.innerText = 'Mencari file...';
-            authStatusDiv.innerText = 'Mencari file backup di Google Drive...';
+            authStatusDiv.innerText = 'Mencari file backup...';
 
             try {
                 const fileId = await findBackupFileId();
-
                 if (!fileId) {
-                    alert("File backup tidak ditemukan di Google Drive Anda (AppDataFolder).");
-                    authStatusDiv.innerText = 'File backup tidak ditemukan.';
-                    restoreButtonGDrive.disabled = false;
-                    restoreButtonGDrive.innerText = 'Restore dari Google Drive';
+                    alert("File backup tidak ditemukan.");
                     return;
                 }
-
-                console.log(`Mendownload file dengan ID: ${fileId}`);
-                restoreButtonGDrive.innerText = 'Mendownload...';
-                authStatusDiv.innerText = 'Sedang mendownload data...';
-
 
                 const response = await gapi.client.drive.files.get({
                     fileId: fileId,
                     alt: 'media'
                 });
 
-                console.log("Respons download:", response);
-                const fileContent = response.body; // Ini adalah string JSON
-
-                 restoreButtonGDrive.innerText = 'Memproses...';
-                 authStatusDiv.innerText = 'Memproses data...';
-
-                try {
-                    const data = JSON.parse(fileContent);
-
-                    if (data && typeof data.produk !== 'undefined' && typeof data.nota !== 'undefined' && typeof data.pengaturanToko !== 'undefined') {
-                        localStorage.setItem('produk', JSON.stringify(data.produk));
-                        localStorage.setItem('nota', JSON.stringify(data.nota));
-                        localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
-
-                        alert('Data berhasil direstore dari Google Drive! Halaman akan dimuat ulang untuk menerapkan perubahan.');
-                        authStatusDiv.innerText = 'Restore berhasil! Memuat ulang...';
-                        // Panggil fungsi load data Anda ATAU refresh halaman
-                        // Contoh: muatNota();
-                        location.reload(); // Cara termudah
-
-                    } else {
-                        alert('Format data dalam file backup Google Drive tidak valid.');
-                        authStatusDiv.innerText = 'Format file backup tidak valid.';
-                    }
-                } catch (parseError) {
-                    console.error("Error parsing JSON dari file backup:", parseError);
-                    alert('Gagal membaca data dari file backup Google Drive. File mungkin rusak atau bukan JSON.');
-                    authStatusDiv.innerText = 'Gagal membaca file backup.';
+                const data = JSON.parse(response.body);
+                if (data) {
+                    localStorage.setItem('produk', JSON.stringify(data.produk));
+                    localStorage.setItem('nota', JSON.stringify(data.nota));
+                    localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
+                    alert('Restore berhasil! Halaman akan dimuat ulang.');
+                    location.reload();
                 }
-
             } catch (error) {
-                console.error("Error saat restore dari Google Drive:", error);
-                 alert(`Terjadi kesalahan saat restore: ${error.result?.error?.message || error.message || error}`);
-                 authStatusDiv.innerText = 'Error saat restore.';
+                alert(`Gagal restore: ${error.result?.error?.message || error.message}`);
             } finally {
-                // Pastikan tombol aktif kembali jika tidak terjadi reload
-                if (!authStatusDiv.innerText.includes('Memuat ulang')) {
-                    restoreButtonGDrive.disabled = false;
-                    restoreButtonGDrive.innerText = 'Restore dari Google Drive';
-                     updateUIBasedOnAuthState(true); // Kembalikan status normal
-                }
+                restoreButtonGDrive.disabled = false;
+                updateUIBasedOnAuthState(true);
             }
         };
 
-
-        // --- Fungsi Backup & Import Lokal (Kode Anda Sebelumnya) ---
-
-        backupButtonLocal.addEventListener('click', () => {
-            try {
-                const data = {
-                    produk: JSON.parse(localStorage.getItem('produk') || '[]'),
-                    nota: JSON.parse(localStorage.getItem('nota') || '[]'),
-                    pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')
-                };
-                // Pretty print JSON agar mudah dibaca jika dibuka manual
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `backup_lokal_${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                console.log("Backup lokal berhasil dibuat.");
-            } catch(error) {
-                console.error("Gagal membuat backup lokal:", error);
-                alert("Gagal membuat file backup lokal.");
-            }
-        });
-
-        importButtonLocal.addEventListener('click', () => {
-            fileImportInput.click();
-        });
-
-        fileImportInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                try {
-                    const data = JSON.parse(event.target.result);
-                    if (data && typeof data.produk !== 'undefined' && typeof data.nota !== 'undefined' && typeof data.pengaturanToko !== 'undefined') {
-                        if (confirm("PERINGATAN: Ini akan menimpa data kasir lokal Anda saat ini dengan data dari file. Apakah Anda yakin ingin melanjutkan?")) {
-                            localStorage.setItem('produk', JSON.stringify(data.produk));
-                            localStorage.setItem('nota', JSON.stringify(data.nota));
-                            localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
-                            alert('Data lokal berhasil diimpor dari file! Halaman akan dimuat ulang.');
-                            // Panggil fungsi muat ulang data UI Anda atau refresh
-                            // Contoh: muatNota();
-                            location.reload();
-                        }
-                    } else {
-                         alert('Format file JSON tidak valid untuk import.');
-                    }
-                } catch (error) {
-                    console.error("Error parsing file import lokal:", error);
-                    alert('Gagal membaca file. Pastikan file adalah JSON backup yang benar dan tidak rusak.');
-                } finally {
-                    // Reset input file agar bisa memilih file yang sama lagi
-                    e.target.value = null;
-                }
-            };
-             reader.onerror = (error) => {
-                console.error("FileReader error:", error);
-                alert("Gagal membaca file yang dipilih.");
-             };
-            reader.readAsText(file);
-        });
-
-        // --- Inisialisasi Saat Halaman Dimuat ---
+        // --- Inisialisasi Awal ---
         window.onload = () => {
-            console.log("Halaman dimuat. Memulai inisialisasi Google API...");
-            // Panggil loader GAPI dan GIS
-             if (typeof gapi !== 'undefined') {
-                gapiLoaded();
-             } else {
-                console.error("GAPI script not loaded yet or blocked.");
-                authStatusDiv.innerText = 'Error: GAPI script gagal dimuat.';
-             }
-
-             if (typeof google !== 'undefined' && google.accounts) {
-                gisLoaded();
-             } else {
-                console.error("GIS script not loaded yet or blocked.");
-                authStatusDiv.innerText = 'Error: GIS script gagal dimuat.';
-             }
+            if (typeof gapi !== 'undefined') gapiLoaded();
+            if (typeof google !== 'undefined' && google.accounts) gisLoaded();
         };
+</script>
 
-    </script>
-</body>
-</html>
             </div>
             <div class="d-flex flex-column" style="width: 100%;"><input class="d-none d-flex" type="file" id="fileImport" style="font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-radius: 16px;"></div>
             <div>
