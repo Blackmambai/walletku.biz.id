@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     const cariProduk = document.getElementById('cariProduk');
     const daftarProduk = document.getElementById('daftarProduk');
@@ -212,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
              alt="${produk.namaProduk}"
              style="border-radius: 16px 16px 0 0; object-fit: cover;height: 200px;margin-bottom: 16px; >
             <h5 class="card-title" style="font-family: Nunito, sans-serif;font-size: 20px;font-weight: bold;">${produk.namaProduk}</h5>
-            <p class="card-text" style="font-family: Nunito, sans-serif;font-size: 16px;color: rgb(43,43,44);font-weight: bold;"> Harga: Rp ${produk.hargaJual.toLocaleString()}<br /> Stok: ${produk.stokProduk} </p><button class="btn btn-primary text-nowrap text-start d-flex d-xxl-flex justify-content-center align-items-center tambah-produk btnproduk1" data-nama="${produk.namaProduk}" data-harga="${produk.hargaJual}" data-stok="${produk.stokProduk}" data-id="${produk.id || produk.namaProduk}"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i> Tambah </button>
+            <p class="card-text" style="font-family: Nunito, sans-serif;font-size: 16px;color: rgb(43,43,44);font-weight: bold;"> Harga: Rp ${produk.hargaJual.toLocaleString()}<br /> Stok: ${produk.stokProduk} </p><button class="btn btn-primary text-nowrap text-start d-flex d-xxl-flex justify-content-center align-items-center tambah-produk btnproduk1" data-nama="${produk.namaProduk}" data-harga="${produk.hargaJual}" data-stok="${produk.stokProduk}"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i> Tambah </button>
         </div>
     </div>
 </div>
@@ -222,20 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.tambah-produk').forEach(btn => {
             btn.addEventListener('click', tambahKeKeranjang);
         });
-    }
-
-    // Fungsi untuk memperbarui stok produk di localStorage
-    function updateProductStock(productName, changeAmount) {
-        const produkList = JSON.parse(localStorage.getItem('produk') || '[]');
-        const productIndex = produkList.findIndex(p => p.namaProduk === productName);
-        
-        if (productIndex !== -1) {
-            produkList[productIndex].stokProduk += changeAmount;
-            localStorage.setItem('produk', JSON.stringify(produkList));
-            
-            // Perbarui tampilan produk
-            muatProduk(cariProduk.value);
-        }
     }
 
     // Tambah ke Keranjang
@@ -249,8 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (itemExist) {
             if (itemExist.jumlah < stok) {
                 itemExist.jumlah++;
-                // Kurangi stok produk
-                updateProductStock(nama, -1);
             } else {
                 alert('Stok produk tidak mencukupi');
                 return;
@@ -261,8 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 harga,
                 jumlah: 1
             });
-            // Kurangi stok produk
-            updateProductStock(nama, -1);
         }
 
         updateKeranjang();
@@ -277,10 +260,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <small class="d-block">Rp ${item.harga.toLocaleString()} x ${item.jumlah}</small>
                 </div>
                 <div>
-                    <button class="btn btn-sm btn-outline-danger me-2 kurang-item" data-index="${index}" data-nama="${item.nama}">
+                    <button class="btn btn-sm btn-outline-danger me-2 kurang-item" data-index="${index}">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger hapus-item" data-index="${index}" data-nama="${item.nama}" data-jumlah="${item.jumlah}">
+                    <button class="btn btn-sm btn-outline-danger hapus-item" data-index="${index}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -304,18 +287,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Kurang Item
     function kurangItem(e) {
         const index = e.currentTarget.dataset.index;
-        const productName = e.currentTarget.dataset.nama;
-        
         if (keranjangItems[index].jumlah > 1) {
             keranjangItems[index].jumlah--;
-            // Tambahkan kembali stok produk
-            updateProductStock(productName, 1);
         } else {
-            // Jika jumlah menjadi 0, hapus item
-            const jumlahItem = keranjangItems[index].jumlah;
             keranjangItems.splice(index, 1);
-            // Tambahkan kembali stok produk
-            updateProductStock(productName, jumlahItem);
         }
         updateKeranjang();
     }
@@ -323,12 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hapus Item
     function hapusItem(e) {
         const index = e.currentTarget.dataset.index;
-        const productName = e.currentTarget.dataset.nama;
-        const jumlahItem = keranjangItems[index].jumlah;
-        
         keranjangItems.splice(index, 1);
-        // Tambahkan kembali stok produk
-        updateProductStock(productName, jumlahItem);
         updateKeranjang();
     }
 
@@ -379,16 +349,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Kurangi stok produk
+        const produkList = JSON.parse(localStorage.getItem('produk') || '[]');
+        keranjangItems.forEach(item => {
+            const produkIndex = produkList.findIndex(p => p.namaProduk === item.nama);
+            if (produkIndex !== -1) {
+                produkList[produkIndex].stokProduk -= item.jumlah;
+            }
+        });
+        localStorage.setItem('produk', JSON.stringify(produkList));
+
         // Simpan nota
         const nota = JSON.parse(localStorage.getItem('nota') || '[]');
         const notaBaru = {
-            tanggal: new Date().toLocaleDateString('id-ID', { 
-                day: '2-digit', 
-                month: '2-digit', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            }),
+            tanggal: new Date().toISOString().split('T')[0],
             namaPelanggan,
             metodePembayaran,
             produk: keranjangItems,
@@ -414,9 +388,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateKeranjang();
         formPembayaran.reset();
         bootstrap.Modal.getInstance(document.getElementById('modalPembayaran')).hide();
-        
-        // Perbarui tampilan produk setelah pembayaran
-        muatProduk();
     });
 
     // Hitung Kembalian
@@ -471,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('nota', JSON.stringify(data.nota));
                 localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
                 alert('Data berhasil diimpor!');
-                muatProduk();
+                muatNota();
             } catch (error) {
                 alert('file anda telah di backup dengan aman! silahkan refresh halaman');
             }
