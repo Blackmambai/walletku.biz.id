@@ -24,24 +24,3 @@
   }
 }
 
-.nav-link:hover, .nav-link:focus {
-  font-size: 16px;
-  margin-left: 0px;
-  font-family: Nunito, sans-serif;
-  font-weight: bold;
-  border-radius: 16px;
-  border-width: 2px;
-  border-style: solid;
-  box-shadow: 0px 6px 20px rgba(42,58,136,0.49);
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  font-size: 16px;
-  margin-left: 0px;
-  font-family: Nunito, sans-serif;
-  font-weight: bold;
-  border-radius: 16px;
-  border-width: 2px;
-  border-style: solid;
-}
-

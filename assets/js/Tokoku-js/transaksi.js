@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
              class="card-img-top" 
              alt="${produk.namaProduk}"
              style="border-radius: 16px 16px 0 0; object-fit: cover;height: 200px;margin-bottom: 16px; >
-            <h5 class="card-title" style="font-family: Nunito, sans-serif;font-size: 20px;color: rgb(43,43,44);font-weight: bold;">${produk.namaProduk}</h5>
+            <h5 class="card-title" style="font-family: Nunito, sans-serif;font-size: 20px;font-weight: bold;">${produk.namaProduk}</h5>
             <p class="card-text" style="font-family: Nunito, sans-serif;font-size: 16px;color: rgb(43,43,44);font-weight: bold;"> Harga: Rp ${produk.hargaJual.toLocaleString()}<br /> Stok: ${produk.stokProduk} </p><button class="btn btn-primary text-nowrap text-start d-flex d-xxl-flex justify-content-center align-items-center tambah-produk btnproduk1" data-nama="${produk.namaProduk}" data-harga="${produk.hargaJual}" data-stok="${produk.stokProduk}"><i class="fas fa-plus-circle" style="margin-right: 10px;"></i> Tambah </button>
         </div>
     </div>
