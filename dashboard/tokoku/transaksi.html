@@ -57,72 +57,7 @@
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="laporan.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-chart-bar me-2"></i> Laporan</a></li>
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="toko.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-store me-2"></i> Profile TokoKu</a></li>
                     <li class="nav-item pulse animated infinite" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="../index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent" rel="prev"><i class="fas fa-wallet me-2"></i> WalletKu</a></li>
-                </ul><script src="https://apis.google.com/js/api.js"></script>  
-    <script>  
-        const CLIENT_ID = '274038578804-3u4tcdmrn7a92skv1i91u28slt69u581.apps.googleusercontent.com';  
-        const SCOPES = 'https://www.googleapis.com/auth/drive.file';  
-
-        // Memuat API dan mengautentikasi  
-        function handleClientLoad() {  
-            gapi.load('client:auth2', initClient);  
-        }  
-
-        function initClient() {  
-            gapi.client.init({  
-                clientId: CLIENT_ID,  
-                scope: SCOPES,  
-            }).then(() => {  
-                const authInstance = gapi.auth2.getAuthInstance();  
-                if (authInstance.isSignedIn.get()) {  
-                    // Pengguna sudah terautentikasi  
-                    document.getElementById('btnBackup').style.display = 'block';  
-                } else {  
-                    authInstance.signIn().then(() => {  
-                        document.getElementById('btnBackup').style.display = 'block';  
-                    });  
-                }  
-            });  
-        }  
-
-        // Fungsi untuk melakukan backup ke Google Drive  
-        document.addEventListener('DOMContentLoaded', function () {  
-            document.getElementById('btnBackup').addEventListener('click', () => {  
-                const data = {  
-                    produk: JSON.parse(localStorage.getItem('produk') || '[]'),  
-                    nota: JSON.parse(localStorage.getItem('nota') || '[]'),  
-                    pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')  
-                };  
-
-                const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });  
-                const fileName = `backup_${new Date().toISOString().split('T')[0]}.json`;  
-
-                const metadata = {  
-                    'name': fileName,  
-                    'mimeType': 'application/json',  
-                };  
-
-                const form = new FormData();  
-                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));  
-                form.append('file', blob);  
-
-                fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {  
-                    method: 'POST',  
-                    headers: new Headers({ 'Authorization': 'Bearer ' + gapi.auth.getToken().access_token }),  
-                    body: form,  
-                }).then(response => response.json()).then(data => {  
-                    console.log('Backup berhasil:', data);  
-                    alert('Backup data berhasil disimpan ke Google Drive!');  
-                }).catch(error => {  
-                    console.error('Error:', error);  
-                    alert('Terjadi kesalahan saat melakukan backup.');  
-                });  
-            });  
-        });  
-
-        // Jalankan fungsi pemuatan API  
-        handleClientLoad();  
-    </script>
-<button id="btnBackup" style="display: none;">Backup Data</button>  
+                </ul>
             </div>
             <div class="d-flex flex-column" style="width: 100%;"><input class="d-none d-flex" type="file" id="fileImport" style="font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-radius: 16px;"></div>
             <div>
