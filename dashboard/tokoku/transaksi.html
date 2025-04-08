@@ -58,6 +58,75 @@
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="toko.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-store me-2"></i> Profile TokoKu</a></li>
                     <li class="nav-item pulse animated infinite" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="../index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent" rel="prev"><i class="fas fa-wallet me-2"></i> WalletKu</a></li>
                 </ul><div id="gSignIn" style="display: none;"></div>
+
+<script>
+    // Inisialisasi Google Client
+let googleClientInitialized = false;
+
+async function initGoogleClient() {
+  if (googleClientInitialized) return;
+  
+  await new Promise((resolve) => gapi.load('client:auth2', resolve));
+  
+  await gapi.client.init({
+    clientId: '274038578804-3u4tcdmrn7a92skv1i91u28slt69u581.apps.googleusercontent.com',
+    scope: 'https://www.googleapis.com/auth/drive.file',
+  });
+  
+  googleClientInitialized = true;
+}
+
+// Backup ke Google Drive
+async function backupToDrive() {
+  try {
+    await initGoogleClient();
+    const auth = gapi.auth2.getAuthInstance();
+    
+    if (!auth.isSignedIn.get()) {
+      await auth.signIn();
+    }
+
+    const data = {
+      produk: JSON.parse(localStorage.getItem('produk') || '[]'),
+      nota: JSON.parse(localStorage.getItem('nota') || '[]'),
+      pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')
+    };
+
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const filename = `backup_${new Date().toISOString().split('T')[0]}.json`;
+
+    const response = await gapi.client.drive.files.create({
+      resource: {
+        name: filename,
+        mimeType: 'application/json',
+        parents: ['root']
+      },
+      media: {
+        mimeType: 'application/json',
+        body: blob
+      }
+    });
+
+    console.log('Backup berhasil:', response.result);
+    alert('Backup ke Google Drive berhasil!');
+  } catch (error) {
+    console.error('Error backup:', error);
+    alert('Gagal backup: ' + error.message);
+  }
+}
+
+// Auto backup setiap 24 jam
+setInterval(async () => {
+  if (gapi.auth2 && gapi.auth2.getAuthInstance().isSignedIn.get()) {
+    await backupToDrive();
+  }
+}, 86400000); // 24 jam
+
+// Update tombol backup
+document.getElementById('btnBackup').addEventListener('click', backupToDrive);
+
+// Fungsi yang sudah ada untuk import data tetap sama
+</script>
             </div>
             <div class="d-flex flex-column" style="width: 100%;"><input class="d-none d-flex" type="file" id="fileImport" style="font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-radius: 16px;"></div>
             <div>
