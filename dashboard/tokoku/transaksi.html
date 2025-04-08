@@ -285,16 +285,20 @@
                                     </div>
                                     <div class="modal-body">
                                         <form id="formPembayaran">
-                                            <div class="mb-3"><label class="form-label">Nama Pelanggan</label><input class="form-control form-control" type="text" id="namaPelanggan" required="" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);"></div>
-                                            <div class="mb-3"><label class="form-label">Total Pembayaran</label><input class="form-control form-control" type="text" id="totalPembayaran" readonly="" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);"></div>
-                                            <div class="mb-3"><label class="form-label">Metode Pembayaran</label><select class="form-select form-select" id="metodePembayaran" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);">
+                                            <div class="mb-3"><label class="form-label" style="color: var(--text-color);">Nama Pelanggan</label><input class="form-control form-control" type="text" id="namaPelanggan" required="" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);color: var(--text-color);"></div>
+                                            <div class="mb-3"><label class="form-label" style="color: var(--text-color);">Total Pembayaran</label><input class="form-control form-control" type="text" id="totalPembayaran" readonly="" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);color: var(--text-color);"></div>
+                                            <div class="mb-3"><label class="form-label" style="color: var(--text-color);">Metode Pembayaran</label><select class="form-select form-select" id="metodePembayaran" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);color: var(--text-color);">
                                                     <option value="tunai">Tunai</option>
                                                     <option value="transfer">Transfer</option>
                                                     <option value="qris">QRIS</option>
                                                     <option value="shopee">Shopee</option>
+                                                    <option value="Tokopedia">Tokopedia</option>
+                                                    <option value="TikTok Shop">TikTok Shop</option>
+                                                    <option value="Lazada">Lazada</option>
+                                                    <option value="BukaLapak">BukaLapak</option>
                                                 </select></div>
-                                            <div class="mb-3"><label class="form-label">Uang Diterima</label><input class="form-control form-control" type="number" id="uangDiterima" required="" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);"></div>
-                                            <div class="mb-3"><label class="form-label">Kembalian</label><input class="form-control form-control" type="text" id="kembalian" readonly="" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);"></div>
+                                            <div class="mb-3"><label class="form-label" style="color: var(--text-color);">Uang Diterima</label><input class="form-control form-control" type="number" id="uangDiterima" required="" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);color: var(--text-color);"></div>
+                                            <div class="mb-3"><label class="form-label" style="color: var(--text-color);">Kembalian</label><input class="form-control form-control" type="text" id="kembalian" readonly="" style="border-radius: 16px;width: 100%;border-color: rgb(78,115,223);color: var(--text-color);"></div>
                                         </form>
                                     </div>
                                     <div class="modal-footer"><button class="btn btn-primary text-start d-flex d-xxl-flex justify-content-center align-items-center d-flex" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" type="submit" form="formPembayaran"><i class="fas fa-save" style="margin-right: 10px;"></i> Selesaikan Transaksi</button></div>
