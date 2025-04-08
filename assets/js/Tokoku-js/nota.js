@@ -13,23 +13,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fungsi Muat Nota
     function muatNota(filter = {}) {
         notaList = JSON.parse(localStorage.getItem('nota') || '[]');
-
-        // Filter berdasarkan rentang tanggal
-        if (filter.tanggalMulai && filter.tanggalSelesai) {
-            notaList = notaList.filter(nota => 
-                nota.tanggal >= filter.tanggalMulai && 
-                nota.tanggal <= filter.tanggalSelesai
-            );
+    
+        // Filter berdasarkan tanggal
+        if (filter.tanggalMulai || filter.tanggalSelesai) {
+            const startDate = filter.tanggalMulai ? new Date(filter.tanggalMulai) : null;
+            const endDate = filter.tanggalSelesai ? new Date(filter.tanggalSelesai) : null;
+            if (endDate) endDate.setHours(23, 59, 59, 999); // Akhir hari
+    
+            notaList = notaList.filter(nota => {
+                const notaDate = new Date(nota.tanggal);
+                return (!startDate || notaDate >= startDate) && 
+                       (!endDate || notaDate <= endDate);
+            });
         }
-
-        // Filter berdasarkan metode pembayaran
+    
+        // Filter metode pembayaran (jika dipilih)
         if (filter.metodePembayaran) {
             notaList = notaList.filter(nota => 
                 nota.metodePembayaran === filter.metodePembayaran
             );
         }
-
-        // Urutkan nota dari yang terbaru
+    
+        // Urutkan dari terbaru
         notaList.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
 
         // Tampilkan nota
@@ -201,15 +206,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Export Nota ke Excel
     btnExportNota.addEventListener('click', () => {
         // Konversi nota ke format CSV
-        const csvContent = [
-            ['Tanggal', 'Nama Pelanggan', 'Total Penjualan', 'Metode Pembayaran'],
-            ...notaList.map(nota => [
-                nota.tanggal,
-                nota.namaPelanggan,
-                nota.totalHarga,
-                nota.metodePembayaran
-            ])
-        ].map(e => e.join(",")).join("\n");
+        const notaBaru = {
+            tanggal: new Date().toISOString(), // Ganti toLocaleString() ke toISOString()
+            namaPelanggan,
+            metodePembayaran,
+            produk: keranjangItems,
+            totalHarga: total,
+            uangDiterima,
+            kembalian: uangDiterima - total
+        };
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
