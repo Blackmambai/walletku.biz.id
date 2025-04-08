@@ -4,48 +4,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnImport = document.getElementById('btnImport');  
     const aktifitasTerakhir = document.getElementById('aktifitasTerakhir');  
 
-    // Fungsi Backup Data  
-    btnBackup.addEventListener('click', () => {  
-        const dataToBackup = {  
-            nota: JSON.parse(localStorage.getItem('nota') || '[]'),  
-            produk: JSON.parse(localStorage.getItem('produk') || '[]'),  
-            toko: JSON.parse(localStorage.getItem('toko') || '{}')  
-        };  
+    // Backup Data
+    document.getElementById('btnBackup').addEventListener('click', () => {
+        const data = {
+            produk: JSON.parse(localStorage.getItem('produk') || '[]'),
+            nota: JSON.parse(localStorage.getItem('nota') || '[]'),
+            pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')
+        };
+        
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `backup_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
 
-        const blob = new Blob([JSON.stringify(dataToBackup)], { type: 'application/json' });  
-        const url = URL.createObjectURL(blob);  
-        const a = document.createElement('a');  
-        a.href = url;  
-        a.download = `backup_toko_${new Date().toISOString().split('T')[0]}.json`;  
-        a.click();  
-        URL.revokeObjectURL(url);  
-    });  
+    // Import Data
+    document.getElementById('btnImport').addEventListener('click', () => {
+        document.getElementById('fileImport').click();
+    });
 
-    // Fungsi Import Data  
-    btnImport.addEventListener('click', () => {  
-        fileImport.click();  
-    });  
+    // Perbaikan 3: Import data dengan pemanggilan fungsi yang benar
+    document.getElementById('fileImport').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
 
-    // Event listener untuk file input  
-    fileImport.addEventListener('change', function (e) {  
-        const file = e.target.files[0];  
-        if (!file) return;  
-
-        const reader = new FileReader();  
-        reader.onload = (event) => {  
-            try {  
-                const importedData = JSON.parse(event.target.result);  
-                localStorage.setItem('nota', JSON.stringify(importedData.nota));  
-                localStorage.setItem('produk', JSON.stringify(importedData.produk));  
-                localStorage.setItem('toko', JSON.stringify(importedData.toko));  
-                alert('Data berhasil diimpor');  
-                updateDashboard();  
-                location.reload();  
-            } catch (error) {  
-                alert('Format file tidak valid');  
-            }  
-        };  
-        reader.readAsText(file);  
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const data = JSON.parse(event.target.result);
+                localStorage.setItem('produk', JSON.stringify(data.produk));
+                localStorage.setItem('nota', JSON.stringify(data.nota));
+                localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
+                alert('Data berhasil diimpor!');
+                muatProduk(); // Diubah dari muatNota() ke muatProduk()
+            } catch (error) {
+                alert('Silahkan Refresh!');
+            }
+        };
+        reader.readAsText(file);
     });  
 
     // Fungsi Update Dashboard  
