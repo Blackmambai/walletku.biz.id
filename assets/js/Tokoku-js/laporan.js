@@ -440,33 +440,25 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(link);
     });
 
-    // Filter Laporan
     btnTerapkanFilter.addEventListener('click', () => {
         const produkDipilih = Array.from(filterProduk.selectedOptions).map(option => option.value);
-        const filterTanggal = {
-            mulai: tanggalMulai.value,
-            selesai: tanggalSelesai.value
-        };
-
-        // Filter nota berdasarkan tanggal dan produk
+        const startDate = new Date(tanggalMulai.value);
+        const endDate = new Date(tanggalSelesai.value);
+        if (endDate) endDate.setHours(23, 59, 59, 999);
+    
         const notaFiltered = nota.filter(n => {
-            const tanggalSesuai = (!filterTanggal.mulai || n.tanggal >= filterTanggal.mulai) &&
-                                  (!filterTanggal.selesai || n.tanggal <= filterTanggal.selesai);
-            
+            const notaDate = new Date(n.tanggal);
+            const tanggalSesuai = (!tanggalMulai.value || notaDate >= startDate) &&
+                                  (!tanggalSelesai.value || notaDate <= endDate);
             const produkSesuai = produkDipilih.length === 0 || 
                 n.produk.some(p => produkDipilih.includes(p.nama));
-
             return tanggalSesuai && produkSesuai;
         });
-
-        // Perbarui tampilan dengan data filter
+    
         hitungStatistik(notaFiltered);
         tampilkanDetailPenjualan(notaFiltered);
         buatGrafikPenjualan('harian');
         tampilkanProdukTerlaris();
-
-        // Tutup modal filter
-        bootstrap.Modal.getInstance(document.getElementById('modalFilter')).hide();
     });
 
     // Muat data saat halaman pertama kali dimuat
