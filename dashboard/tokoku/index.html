@@ -153,16 +153,6 @@
                             <div class="row">
                                 <div class="col d-flex flex-column flex-sm-column flex-md-column flex-lg-row flex-xl-row flex-xxl-row" style="gap: 16px;margin-bottom: 30px;">
                                     <div class="d-flex summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
-                                        <div style="margin-right: 16px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 0 512 512" width="1em" height="1em" fill="currentColor" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);">
-                                                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
-                                                <path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM80 64h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm16 96H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm0 32v64H288V256H96zM240 416h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H240c-8.8 0-16-7.2-16-16s7.2-16 16-16z"></path>
-                                            </svg></div>
-                                        <div>
-                                            <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 0px;">Nota hari ini</h3>
-                                            <p id="totalNotaHariIni" style="font-family: Nunito, sans-serif;font-weight: bold;color: rgb(45,46,55);font-size: 20px;margin-bottom: 0px;">Rp0</p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
                                         <div style="margin-right: 16px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -64 640 640" width="1em" height="1em" fill="currentColor" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);">
                                                 <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
                                                 <path d="M96 96V320c0 35.3 28.7 64 64 64H576c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H160c-35.3 0-64 28.7-64 64zm64 160c35.3 0 64 28.7 64 64H160V256zM224 96c0 35.3-28.7 64-64 64V96h64zM576 256v64H512c0-35.3 28.7-64 64-64zM512 96h64v64c-35.3 0-64-28.7-64-64zM288 208a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zM48 120c0-13.3-10.7-24-24-24S0 106.7 0 120V360c0 66.3 53.7 120 120 120H520c13.3 0 24-10.7 24-24s-10.7-24-24-24H120c-39.8 0-72-32.2-72-72V120z"></path>
@@ -181,6 +171,15 @@
                                             <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 0px;">Total Stock</h3>
                                             <p id="totalStokProduk" style="font-family: Nunito, sans-serif;font-weight: bold;color: rgb(45,46,55);font-size: 20px;margin-bottom: 0px;">Belum ada stock</p>
                                         </div>
+                                    </div>
+                                    <div class="d-flex flex-column summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
+                                        <div style="margin-right: 16px;margin-bottom: 16px;"><i class="fas fa-redo" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);"></i></div>
+                                        <div>
+                                            <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 16px;">Produk terlaris</h3>
+                                        </div>
+                                        <ul class="list-group d-flex flex-column-reverse" id="produkTerlaris" style="max-height: 700px;overflow-x: hidden;overflow-y: scroll;">
+                                            <li class="list-group-item"><span>Belum ada aktifitas</span></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -281,7 +280,7 @@
                         </div>
                         <div class="col-md-3 col-lg-3" style="padding: 16px;">
                             <ul class="list-group">
-                                <li class="list-group-item" style="border-width: 0px;border-style: none;padding-top: 5px;padding-bottom: 5px;font-size: 16px;background: var(--primary-color);color: var(--card-color);border-radius: 6.6px 5.6px 0px -2px;border-bottom-right-radius: 16px;border-bottom-left-radius: 16px;border-top-right-radius: 16px;border-top-left-radius: 16px;margin-bottom: 16px;"><span style="font-family: Nunito, sans-serif;font-weight: bold;color: var(--card-color);font-size: 16px;">Sponsore Utama</span></li>
+                                <li class="list-group-item" style="border-width: 0px;border-style: none;padding-top: 5px;padding-bottom: 5px;font-size: 16px;background: var(--primary-color);color: var(--card-color);border-radius: 6.6px 5.6px 0px -2px;border-bottom-right-radius: 16px;border-bottom-left-radius: 16px;border-top-right-radius: 16px;border-top-left-radius: 16px;margin-bottom: 16px;"><span style="font-family: Nunito, sans-serif;font-weight: bold;color: var(--card-color);font-size: 16px;">Sponsor Utama</span></li>
                                 <li class="list-group-item" style="border-width: 0px;border-style: none;padding-top: 0px;padding-bottom: 5px;font-size: 16px;"><a href="https://walletku.biz.id/#sponsor" style="color: var(--text-color);font-weight: bold;font-family: Nunito, sans-serif;" rel="prev">Sponsor<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-up-right-circle-fill" style="margin-left: 6px;">
                                             <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8m5.904 2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707z"></path>
                                         </svg></a></li>
