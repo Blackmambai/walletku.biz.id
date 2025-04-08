@@ -56,144 +56,65 @@
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="laporan.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-chart-bar me-2"></i> Laporan</a></li>
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="toko.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-store me-2"></i> Profile TokoKu</a></li>
                     <li class="nav-item pulse animated infinite" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="../index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent" rel="prev"><i class="fas fa-wallet me-2"></i> WalletKu</a></li>
-                </ul><!-- HTML -->
-<button id="googleLogin">Login dengan Google</button>
-<button id="btnBackup" disabled>Backup ke Drive</button>
-<div id="authStatus"></div>
+                </ul><button id="btnBackup">Backup Data</button>  
 
+    <script>  
+        const CLIENT_ID = '274038578804-3u4tcdmrn7a92skv1i91u28slt69u581.apps.googleusercontent.com';  
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';  
 
-<script>
-   // Konfigurasi
-const GOOGLE_CLIENT_ID = '274038578804-3u4tcdmrn7a92skv1i91u28slt69u581.apps.googleusercontent.com';
-const SCOPE = 'https://www.googleapis.com/auth/drive.file';
+        // Memuat API dan mengautentikasi  
+        function handleClientLoad() {  
+            gapi.load('client:auth2', initClient);  
+        }  
 
-// Inisialisasi Google API
-let gapiInitialized = false;
+        function initClient() {  
+            gapi.client.init({  
+                clientId: CLIENT_ID,  
+                scope: SCOPES,  
+            }).then(() => {  
+                // Cek apakah pengguna sudah terotentikasi  
+                return gapi.auth2.getAuthInstance().signIn();  
+            }).then(() => {  
+                document.getElementById('btnBackup').style.display = 'block';  
+            });  
+        }  
 
-async function initializeGapi() {
-  return new Promise((resolve, reject) => {
-    if (typeof gapi === 'undefined') {
-      return reject('GAPI tidak terload! Pastikan Anda menyertakan script Google API');
-    }
+        // Fungsi untuk melakukan backup ke Google Drive  
+        document.getElementById('btnBackup').addEventListener('click', () => {  
+            const data = {  
+                produk: JSON.parse(localStorage.getItem('produk') || '[]'),  
+                nota: JSON.parse(localStorage.getItem('nota') || '[]'),  
+                pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')  
+            };  
 
-    gapi.load('client:auth2', {
-      callback: async () => {
-        try {
-          await gapi.client.init({
-            clientId: GOOGLE_CLIENT_ID,
-            scope: SCOPE,
-          });
-          gapiInitialized = true;
-          console.log('Google API initialized');
-          resolve();
-        } catch (error) {
-          reject(error);
-        }
-      },
-      onerror: () => reject('Gagal memuat Google API'),
-      timeout: 5000,
-    });
-  });
-}
+            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });  
+            const fileName = `backup_${new Date().toISOString().split('T')[0]}.json`;  
 
-// Cek status login
-function checkAuth() {
-  const auth = gapi.auth2.getAuthInstance();
-  return auth.isSignedIn.get();
-}
+            const metadata = {  
+                'name': fileName,  
+                'mimeType': 'application/json',  
+            };  
 
-// Handle login
-document.getElementById('googleLogin').addEventListener('click', async () => {
-  try {
-    if (!gapiInitialized) await initializeGapi();
-    
-    const auth = gapi.auth2.getAuthInstance();
-    const user = await auth.signIn();
-    
-    document.getElementById('btnBackup').disabled = false;
-    document.getElementById('authStatus').textContent = `Login sebagai: ${user.getBasicProfile().getEmail()}`;
-    console.log('User berhasil login');
-    
-    // Lakukan backup pertama setelah login
-    await backupToDrive();
-  } catch (error) {
-    console.error('Error login:', error);
-    alert(`Gagal login: ${error.error || error.message}`);
-  }
-});
+            const form = new FormData();  
+            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));  
+            form.append('file', blob);  
 
-// Fungsi Backup yang Diperbaiki
-async function backupToDrive() {
-  try {
-    if (!checkAuth()) {
-      throw new Error('Anda belum login!');
-    }
+            fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {  
+                method: 'POST',  
+                headers: new Headers({ 'Authorization': 'Bearer ' + gapi.auth.getToken().access_token }),  
+                body: form,  
+            }).then(response => response.json()).then(data => {  
+                console.log('Backup berhasil:', data);  
+                alert('Backup data berhasil disimpan ke Google Drive!');  
+            }).catch(error => {  
+                console.error('Error:', error);  
+                alert('Terjadi kesalahan saat melakukan backup.');  
+            });  
+        });  
 
-    // Ambil data dari localStorage
-    const backupData = {
-      produk: JSON.parse(localStorage.getItem('produk') || [],
-      nota: JSON.parse(localStorage.getItem('nota') || '[]'),
-      pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')
-    };
-
-    // Buat file metadata
-    const fileMetadata = {
-      name: `backup_${new Date().toISOString().split('T')[0]}.json`,
-      mimeType: 'application/json',
-      parents: ['root']
-    };
-
-    // Buat file content
-    const fileContent = JSON.stringify(backupData);
-    const media = {
-      mimeType: 'application/json',
-      body: fileContent
-    };
-
-    // Upload ke Drive
-    const response = await gapi.client.drive.files.create({
-      resource: fileMetadata,
-      media: media,
-      fields: 'id,name,webViewLink'
-    });
-
-    console.log('Backup berhasil:', response.result);
-    alert(`Backup sukses! File tersedia di: ${response.result.webViewLink}`);
-  } catch (error) {
-    console.error('Backup error:', error);
-    alert(`Gagal backup: ${error.message}\nDetail: ${error.details || error.statusText}`);
-  }
-}
-
-// Event listener untuk tombol backup
-document.getElementById('btnBackup').addEventListener('click', backupToDrive);
-
-// Auto backup setiap 6 jam
-setInterval(async () => {
-  if (checkAuth()) {
-    try {
-      await backupToDrive();
-      console.log('Auto-backup sukses');
-    } catch (error) {
-      console.error('Auto-backup gagal:', error);
-    }
-  }
-}, 6 * 60 * 60 * 1000);
-
-// Cek status awal saat halaman dimuat
-window.addEventListener('load', async () => {
-  try {
-    await initializeGapi();
-    if (checkAuth()) {
-      document.getElementById('btnBackup').disabled = false;
-      const user = gapi.auth2.getAuthInstance().currentUser.get();
-      document.getElementById('authStatus').textContent = `Login sebagai: ${user.getBasicProfile().getEmail()}`;
-    }
-  } catch (error) {
-    console.log('Status awal:', error.message);
-  }
-});
-</script>
+        // Jalankan fungsi pemuatan API  
+        handleClientLoad();  
+    </script>
             </div>
             <div class="d-flex flex-column" style="width: 100%;"><input class="d-none d-flex" type="file" id="fileImport" style="font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-radius: 16px;"></div>
             <div>
