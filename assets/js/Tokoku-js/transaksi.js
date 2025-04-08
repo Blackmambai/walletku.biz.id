@@ -405,15 +405,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Simpan nota  
         const nota = JSON.parse(localStorage.getItem('nota') || '[]');  
-        const notaBaru = {  
-            tanggal: new Date().toLocaleString(),  
-            namaPelanggan,  
-            metodePembayaran,  
-            produk: keranjangItems,  
-            totalHarga: total,  
-            uangDiterima,  
-            kembalian: uangDiterima - total  
-        };  
+        const notaBaru = {
+            tanggal: new Date().toISOString(), // Ganti toLocaleString() ke toISOString()
+            namaPelanggan,
+            metodePembayaran,
+            produk: keranjangItems,
+            totalHarga: total,
+            uangDiterima,
+            kembalian: uangDiterima - total
+        }; 
         nota.push(notaBaru);  
         localStorage.setItem('nota', JSON.stringify(nota));  
 
