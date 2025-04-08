@@ -57,35 +57,73 @@
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="laporan.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-chart-bar me-2"></i> Laporan</a></li>
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="toko.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-store me-2"></i> Profile TokoKu</a></li>
                     <li class="nav-item pulse animated infinite" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="../index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent" rel="prev"><i class="fas fa-wallet me-2"></i> WalletKu</a></li>
-                </ul><div id="gSignIn" style="display: none;"></div>
+                </ul><!-- Tambahkan di HTML -->
+<button id="googleSignInBtn" style="display: none;">Login dengan Google</button>
+<button id="googleSignOutBtn" style="display: none;">Logout</button>
+
 
 <script>
-    // Inisialisasi Google Client
-let googleClientInitialized = false;
+    // Initialize Google API
+let gapiLoaded = false;
 
-async function initGoogleClient() {
-  if (googleClientInitialized) return;
-  
-  await new Promise((resolve) => gapi.load('client:auth2', resolve));
+function initGoogleApi() {
+  return new Promise((resolve) => {
+    if (!gapiLoaded) {
+      gapi.load('client:auth2', () => {
+        gapiLoaded = true;
+        resolve();
+      });
+    } else {
+      resolve();
+    }
+  });
+}
+
+// Inisialisasi client Google
+async function initializeGoogleClient() {
+  await initGoogleApi();
   
   await gapi.client.init({
     clientId: '274038578804-3u4tcdmrn7a92skv1i91u28slt69u581.apps.googleusercontent.com',
     scope: 'https://www.googleapis.com/auth/drive.file',
   });
-  
-  googleClientInitialized = true;
+
+  // Update UI login
+  const auth = gapi.auth2.getAuthInstance();
+  auth.isSignedIn.listen(updateSigninStatus);
+  updateSigninStatus(auth.isSignedIn.get());
 }
 
-// Backup ke Google Drive
+// Update status login
+function updateSigninStatus(isSignedIn) {
+  const signInBtn = document.getElementById('googleSignInBtn');
+  const signOutBtn = document.getElementById('googleSignOutBtn');
+  
+  if (isSignedIn) {
+    signInBtn.style.display = 'none';
+    signOutBtn.style.display = 'inline-block';
+    document.getElementById('btnBackup').disabled = false;
+    startAutoBackup();
+  } else {
+    signInBtn.style.display = 'inline-block';
+    signOutBtn.style.display = 'none';
+    document.getElementById('btnBackup').disabled = true;
+  }
+}
+
+// Handle login
+document.getElementById('googleSignInBtn').addEventListener('click', () => {
+  gapi.auth2.getAuthInstance().signIn();
+});
+
+// Handle logout
+document.getElementById('googleSignOutBtn').addEventListener('click', () => {
+  gapi.auth2.getAuthInstance().signOut();
+});
+
+// Backup function (sama seperti sebelumnya)
 async function backupToDrive() {
   try {
-    await initGoogleClient();
-    const auth = gapi.auth2.getAuthInstance();
-    
-    if (!auth.isSignedIn.get()) {
-      await auth.signIn();
-    }
-
     const data = {
       produk: JSON.parse(localStorage.getItem('produk') || '[]'),
       nota: JSON.parse(localStorage.getItem('nota') || '[]'),
@@ -107,25 +145,38 @@ async function backupToDrive() {
       }
     });
 
-    console.log('Backup berhasil:', response.result);
     alert('Backup ke Google Drive berhasil!');
   } catch (error) {
-    console.error('Error backup:', error);
     alert('Gagal backup: ' + error.message);
   }
 }
 
-// Auto backup setiap 24 jam
-setInterval(async () => {
-  if (gapi.auth2 && gapi.auth2.getAuthInstance().isSignedIn.get()) {
-    await backupToDrive();
+// Auto backup
+let autoBackupInterval;
+
+function startAutoBackup() {
+  autoBackupInterval = setInterval(() => {
+    if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
+      backupToDrive();
+    }
+  }, 86400000); // 24 jam
+}
+
+// Initialize saat halaman dimuat
+window.addEventListener('load', () => {
+  initializeGoogleClient().catch((error) => {
+    console.error('Gagal inisialisasi Google API:', error);
+  });
+});
+
+// Update event listener backup
+document.getElementById('btnBackup').addEventListener('click', async () => {
+  if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+    alert('Silakan login terlebih dahulu!');
+    return;
   }
-}, 86400000); // 24 jam
-
-// Update tombol backup
-document.getElementById('btnBackup').addEventListener('click', backupToDrive);
-
-// Fungsi yang sudah ada untuk import data tetap sama
+  await backupToDrive();
+});
 </script>
             </div>
             <div class="d-flex flex-column" style="width: 100%;"><input class="d-none d-flex" type="file" id="fileImport" style="font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-radius: 16px;"></div>
@@ -609,7 +660,6 @@ document.getElementById('btnBackup').addEventListener('click', backupToDrive);
     <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../assets/js/aos.min.js"></script>
     <script src="../../assets/js/bs-init.js"></script>
-    <script src="../../assets/js/Tokoku-js/backup.js"></script>
     <script src="../../assets/js/Tokoku-js/transaksi.js"></script>
 </body>
 
