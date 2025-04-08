@@ -57,125 +57,142 @@
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="laporan.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-chart-bar me-2"></i> Laporan</a></li>
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="toko.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-store me-2"></i> Profile TokoKu</a></li>
                     <li class="nav-item pulse animated infinite" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="../index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent" rel="prev"><i class="fas fa-wallet me-2"></i> WalletKu</a></li>
-                </ul><!-- Tambahkan di HTML -->
-<button id="googleSignInBtn" style="display: none;">Login dengan Google</button>
-<button id="googleSignOutBtn" style="display: none;">Logout</button>
+                </ul><!-- HTML -->
+<button id="googleLogin">Login dengan Google</button>
+<button id="btnBackup" disabled>Backup ke Drive</button>
+<div id="authStatus"></div>
 
 
 <script>
-    // Initialize Google API
-let gapiLoaded = false;
+   // Konfigurasi
+const GOOGLE_CLIENT_ID = '274038578804-3u4tcdmrn7a92skv1i91u28slt69u581.apps.googleusercontent.com';
+const SCOPE = 'https://www.googleapis.com/auth/drive.file';
 
-function initGoogleApi() {
-  return new Promise((resolve) => {
-    if (!gapiLoaded) {
-      gapi.load('client:auth2', () => {
-        gapiLoaded = true;
-        resolve();
-      });
-    } else {
-      resolve();
+// Inisialisasi Google API
+let gapiInitialized = false;
+
+async function initializeGapi() {
+  return new Promise((resolve, reject) => {
+    if (typeof gapi === 'undefined') {
+      return reject('GAPI tidak terload! Pastikan Anda menyertakan script Google API');
     }
+
+    gapi.load('client:auth2', {
+      callback: async () => {
+        try {
+          await gapi.client.init({
+            clientId: GOOGLE_CLIENT_ID,
+            scope: SCOPE,
+          });
+          gapiInitialized = true;
+          console.log('Google API initialized');
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      },
+      onerror: () => reject('Gagal memuat Google API'),
+      timeout: 5000,
+    });
   });
 }
 
-// Inisialisasi client Google
-async function initializeGoogleClient() {
-  await initGoogleApi();
-  
-  await gapi.client.init({
-    clientId: '274038578804-3u4tcdmrn7a92skv1i91u28slt69u581.apps.googleusercontent.com',
-    scope: 'https://www.googleapis.com/auth/drive.file',
-  });
-
-  // Update UI login
+// Cek status login
+function checkAuth() {
   const auth = gapi.auth2.getAuthInstance();
-  auth.isSignedIn.listen(updateSigninStatus);
-  updateSigninStatus(auth.isSignedIn.get());
-}
-
-// Update status login
-function updateSigninStatus(isSignedIn) {
-  const signInBtn = document.getElementById('googleSignInBtn');
-  const signOutBtn = document.getElementById('googleSignOutBtn');
-  
-  if (isSignedIn) {
-    signInBtn.style.display = 'none';
-    signOutBtn.style.display = 'inline-block';
-    document.getElementById('btnBackup').disabled = false;
-    startAutoBackup();
-  } else {
-    signInBtn.style.display = 'inline-block';
-    signOutBtn.style.display = 'none';
-    document.getElementById('btnBackup').disabled = true;
-  }
+  return auth.isSignedIn.get();
 }
 
 // Handle login
-document.getElementById('googleSignInBtn').addEventListener('click', () => {
-  gapi.auth2.getAuthInstance().signIn();
+document.getElementById('googleLogin').addEventListener('click', async () => {
+  try {
+    if (!gapiInitialized) await initializeGapi();
+    
+    const auth = gapi.auth2.getAuthInstance();
+    const user = await auth.signIn();
+    
+    document.getElementById('btnBackup').disabled = false;
+    document.getElementById('authStatus').textContent = `Login sebagai: ${user.getBasicProfile().getEmail()}`;
+    console.log('User berhasil login');
+    
+    // Lakukan backup pertama setelah login
+    await backupToDrive();
+  } catch (error) {
+    console.error('Error login:', error);
+    alert(`Gagal login: ${error.error || error.message}`);
+  }
 });
 
-// Handle logout
-document.getElementById('googleSignOutBtn').addEventListener('click', () => {
-  gapi.auth2.getAuthInstance().signOut();
-});
-
-// Backup function (sama seperti sebelumnya)
+// Fungsi Backup yang Diperbaiki
 async function backupToDrive() {
   try {
-    const data = {
-      produk: JSON.parse(localStorage.getItem('produk') || '[]'),
+    if (!checkAuth()) {
+      throw new Error('Anda belum login!');
+    }
+
+    // Ambil data dari localStorage
+    const backupData = {
+      produk: JSON.parse(localStorage.getItem('produk') || [],
       nota: JSON.parse(localStorage.getItem('nota') || '[]'),
       pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')
     };
 
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const filename = `backup_${new Date().toISOString().split('T')[0]}.json`;
+    // Buat file metadata
+    const fileMetadata = {
+      name: `backup_${new Date().toISOString().split('T')[0]}.json`,
+      mimeType: 'application/json',
+      parents: ['root']
+    };
 
+    // Buat file content
+    const fileContent = JSON.stringify(backupData);
+    const media = {
+      mimeType: 'application/json',
+      body: fileContent
+    };
+
+    // Upload ke Drive
     const response = await gapi.client.drive.files.create({
-      resource: {
-        name: filename,
-        mimeType: 'application/json',
-        parents: ['root']
-      },
-      media: {
-        mimeType: 'application/json',
-        body: blob
-      }
+      resource: fileMetadata,
+      media: media,
+      fields: 'id,name,webViewLink'
     });
 
-    alert('Backup ke Google Drive berhasil!');
+    console.log('Backup berhasil:', response.result);
+    alert(`Backup sukses! File tersedia di: ${response.result.webViewLink}`);
   } catch (error) {
-    alert('Gagal backup: ' + error.message);
+    console.error('Backup error:', error);
+    alert(`Gagal backup: ${error.message}\nDetail: ${error.details || error.statusText}`);
   }
 }
 
-// Auto backup
-let autoBackupInterval;
+// Event listener untuk tombol backup
+document.getElementById('btnBackup').addEventListener('click', backupToDrive);
 
-function startAutoBackup() {
-  autoBackupInterval = setInterval(() => {
-    if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
-      backupToDrive();
+// Auto backup setiap 6 jam
+setInterval(async () => {
+  if (checkAuth()) {
+    try {
+      await backupToDrive();
+      console.log('Auto-backup sukses');
+    } catch (error) {
+      console.error('Auto-backup gagal:', error);
     }
-  }, 86400000); // 24 jam
-}
-
-// Initialize saat halaman dimuat
-window.addEventListener('load', () => {
-  initializeGoogleClient().catch((error) => {
-    console.error('Gagal inisialisasi Google API:', error);
-  });
-});
-
-// Update event listener backup
-document.getElementById('btnBackup').addEventListener('click', async () => {
-  if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-    alert('Silakan login terlebih dahulu!');
-    return;
   }
-  await backupToDrive();
+}, 6 * 60 * 60 * 1000);
+
+// Cek status awal saat halaman dimuat
+window.addEventListener('load', async () => {
+  try {
+    await initializeGapi();
+    if (checkAuth()) {
+      document.getElementById('btnBackup').disabled = false;
+      const user = gapi.auth2.getAuthInstance().currentUser.get();
+      document.getElementById('authStatus').textContent = `Login sebagai: ${user.getBasicProfile().getEmail()}`;
+    }
+  } catch (error) {
+    console.log('Status awal:', error.message);
+  }
 });
 </script>
             </div>
