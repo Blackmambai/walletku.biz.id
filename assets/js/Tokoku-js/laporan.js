@@ -249,61 +249,76 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fungsi Buat Grafik Penjualan
-    function buatGrafikPenjualan(tipe) {
-        const ctx = document.getElementById('grafikPenjualan').getContext('2d');
-        if (grafikPenjualan) grafikPenjualan.destroy();
-    
-        // Konfigurasi grafik
-        const configGrafik = {
-            harian: {
-                label: 'Penjualan Harian',
-                groupBy: tanggal => tanggal,
-                warna: ['rgba(75, 192, 192, 0.6)', 'rgba(75, 192, 192, 1)']
+    // Fungsi Buat Grafik Penjualan (Tanpa Grid Lines)
+// Fungsi Buat Grafik Penjualan (Tanpa Grid & Sumbu Bawah)
+function buatGrafikPenjualan(tipe) {
+    const ctx = document.getElementById('grafikPenjualan').getContext('2d');
+    if (grafikPenjualan) grafikPenjualan.destroy();
+
+    // Konfigurasi grafik
+    const configGrafik = {
+        harian: {
+            label: 'Penjualan Harian',
+            groupBy: tanggal => tanggal,
+            warna: ['rgba(75, 192, 192, 0.6)', 'rgba(75, 192, 192, 1)']
+        },
+        bulanan: {
+            label: 'Penjualan Bulanan',
+            groupBy: tanggal => tanggal.slice(0, 7),
+            warna: ['rgba(153, 102, 255, 0.6)', 'rgba(153, 102, 255, 1)']
+        }
+    };
+
+    // Proses data
+    const { label, groupBy, warna } = configGrafik[tipe];
+    const dataGrup = nota.reduce((acc, n) => 
+        (acc[groupBy(n.tanggal)] = (acc[groupBy(n.tanggal)] || 0) + n.totalHarga, acc), {});
+
+    // Opsi grafik (sumbu X dihilangkan)
+    const opsiGrafik = {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { 
+                    callback: v => 'Rp ' + v.toLocaleString(),
+                    color: '#6c757d'
+                },
+                grid: { display: false },
+                border: { display: false }
             },
-            bulanan: {
-                label: 'Penjualan Bulanan',
-                groupBy: tanggal => tanggal.slice(0, 7),
-                warna: ['rgba(153, 102, 255, 0.6)', 'rgba(153, 102, 255, 1)']
+            x: {
+                display: false // Hilangkan seluruh sumbu X (garis & label)
             }
-        };
-    
-        // Proses data
-        const { label, groupBy, warna } = configGrafik[tipe];
-        const dataGrup = nota.reduce((acc, n) => 
-            (acc[groupBy(n.tanggal)] = (acc[groupBy(n.tanggal)] || 0) + n.totalHarga, acc), {});
-    
-        // Opsi umum grafik
-        const opsiUmum = {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { callback: v => 'Rp ' + v.toLocaleString() }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: { 
+                    label: ctx => 'Rp ' + ctx.parsed.y.toLocaleString() 
                 }
             },
-            plugins: {
-                tooltip: {
-                    callbacks: { label: ctx => 'Rp ' + ctx.parsed.y.toLocaleString() }
-                }
-            }
-        };
-    
-        // Buat grafik
-        grafikPenjualan = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(dataGrup),
-                datasets: [{
-                    label,
-                    data: Object.values(dataGrup),
-                    backgroundColor: warna[0],
-                    borderColor: warna[1],
-                    tension: 0.4
-                }]
-            },
-            options: opsiUmum
-        });
-    }
+            legend: { display: false }
+        }
+    };
+
+    // Buat grafik
+    grafikPenjualan = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Object.keys(dataGrup),
+            datasets: [{
+                label,
+                data: Object.values(dataGrup),
+                backgroundColor: warna[0],
+                borderColor: warna[1],
+                borderWidth: 2,
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: opsiGrafik
+    });
+}
 
     // Fungsi Tampilkan Detail Penjualan
     function tampilkanDetailPenjualan(dataNota) {
