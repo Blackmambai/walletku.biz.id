@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nilaiPenjualan = hari.map(h => penjualanPerHari[h] || 0);  
 
         new Chart(ctx, {  
-            type: 'line',  
+            type: 'bar',  
             data: {  
                 labels: hari,  
                 datasets: [{  
