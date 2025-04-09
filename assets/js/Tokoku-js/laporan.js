@@ -251,75 +251,57 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fungsi Buat Grafik Penjualan
     function buatGrafikPenjualan(tipe) {
         const ctx = document.getElementById('grafikPenjualan').getContext('2d');
-        
-        // Hapus grafik sebelumnya
-        if (grafikPenjualan) {
-            grafikPenjualan.destroy();
-        }
-
-        let dataGrafik;
-        if (tipe === 'harian') {
-            // Grafik penjualan harian
-            const penjualanHarian = nota.reduce((acc, n) => {
-                acc[n.tanggal] = (acc[n.tanggal] || 0) + n.totalHarga;
-                return acc;
-            }, {});
-
-            dataGrafik = {
-                labels: Object.keys(penjualanHarian),
-                datasets: [{
-                    label: 'Penjualan Harian',
-                    data: Object.values(penjualanHarian),
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    tension: 0.4
-                }]
-            };
-        } else {
-            // Grafik penjualan bulanan
-            const penjualanBulanan = nota.reduce((acc, n) => {
-                const bulan = n.tanggal.slice(0, 7); // YYYY-MM
-                acc[bulan] = (acc[bulan] || 0) + n.totalHarga;
-                return acc;
-            }, {});
-
-            dataGrafik = {
-                labels: Object.keys(penjualanBulanan),
-                datasets: [{
-                    label: 'Penjualan Bulanan',
-                    data: Object.values(penjualanBulanan),
-                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    tension: 0.4
-                }]
-            };
-        }
-
-        grafikPenjualan = new Chart(ctx, {
-            type: 'line',
-            data: dataGrafik,
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return 'Rp ' + value.toLocaleString();
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return 'Rp ' + context.parsed.y.toLocaleString();
-                            }
-                        }
-                    }
+        if (grafikPenjualan) grafikPenjualan.destroy();
+    
+        // Konfigurasi grafik
+        const configGrafik = {
+            harian: {
+                label: 'Penjualan Harian',
+                groupBy: tanggal => tanggal,
+                warna: ['rgba(75, 192, 192, 0.6)', 'rgba(75, 192, 192, 1)']
+            },
+            bulanan: {
+                label: 'Penjualan Bulanan',
+                groupBy: tanggal => tanggal.slice(0, 7),
+                warna: ['rgba(153, 102, 255, 0.6)', 'rgba(153, 102, 255, 1)']
+            }
+        };
+    
+        // Proses data
+        const { label, groupBy, warna } = configGrafik[tipe];
+        const dataGrup = nota.reduce((acc, n) => 
+            (acc[groupBy(n.tanggal)] = (acc[groupBy(n.tanggal)] || 0) + n.totalHarga, acc), {});
+    
+        // Opsi umum grafik
+        const opsiUmum = {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: v => 'Rp ' + v.toLocaleString() }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: { label: ctx => 'Rp ' + ctx.parsed.y.toLocaleString() }
                 }
             }
+        };
+    
+        // Buat grafik
+        grafikPenjualan = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(dataGrup),
+                datasets: [{
+                    label,
+                    data: Object.values(dataGrup),
+                    backgroundColor: warna[0],
+                    borderColor: warna[1],
+                    tension: 0.4
+                }]
+            },
+            options: opsiUmum
         });
     }
 
