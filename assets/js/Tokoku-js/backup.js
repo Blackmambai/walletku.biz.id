@@ -1,4 +1,3 @@
-// backup.js
 document.addEventListener('DOMContentLoaded', () => {
     const btnBackup = document.getElementById('btnBackup');
     const btnImport = document.getElementById('btnImport');
@@ -12,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nota: JSON.parse(localStorage.getItem('nota') || '[]'),
             pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')
         };
-        
+
         const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -31,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fileImport.click();
     });
 
-    fileImport.addEventListener('change', function(e) {
+    fileImport.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
@@ -43,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('nota', JSON.stringify(data.nota));
                 localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
                 alert('Data berhasil diimpor! Silakan refresh halaman.');
+                location.reload();
             } catch (error) {
                 alert('Format file tidak valid!');
             }
