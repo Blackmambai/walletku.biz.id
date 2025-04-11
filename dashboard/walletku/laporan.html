@@ -6,27 +6,27 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Laporan</title>
-    <link rel="canonical" href="https://walletku.biz.id/dashboard/laporan.html">
-    <meta property="og:url" content="https://walletku.biz.id/dashboard/laporan.html">
+    <link rel="canonical" href="https://walletku.biz.id/dashboard/walletku/laporan.html">
+    <meta property="og:url" content="https://walletku.biz.id/dashboard/walletku/laporan.html">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="description" content="Mulai mengelola pemasukan dan pengeluaran-mu dengan mudah. dengan fitur backup export dan import dan mengelola aplikasi toko">
     <meta property="og:image" content="https://walletku.biz.id/assets/img/SEO/og1@2x.webp">
-    <link rel="icon" type="image/png" sizes="484x484" href="../assets/img/SEO/icon-wallet.webp">
-    <link rel="icon" type="image/png" sizes="484x484" href="../assets/img/SEO/icon-wallet.webp" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/png" sizes="484x484" href="../assets/img/SEO/icon-wallet.webp">
-    <link rel="icon" type="image/png" sizes="484x484" href="../assets/img/SEO/icon-wallet.webp" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/png" sizes="484x484" href="../assets/img/SEO/icon-wallet.webp">
-    <link rel="icon" type="image/png" sizes="484x484" href="../assets/img/SEO/icon-wallet.webp">
-    <link rel="icon" type="image/png" sizes="484x484" href="../assets/img/SEO/icon-wallet.webp">
-    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
-    <link rel="manifest" href="../manifest.json" crossorigin="use-credentials">
+    <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
+    <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
+    <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
+    <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
+    <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
+    <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="manifest" href="../../manifest.json" crossorigin="use-credentials">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
-    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="../assets/css/aos.min.css">
-    <link rel="stylesheet" href="../assets/css/animate.min.css">
-    <link rel="stylesheet" href="../assets/css/dashboard-app/style.css">
-    <link rel="stylesheet" href="../assets/css/dashboard-app/Pricing-Duo-badges.css">
-    <link rel="stylesheet" href="../assets/css/dashboard-app/Pricing-Duo-icons.css">
+    <link rel="stylesheet" href="../../assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../../assets/css/aos.min.css">
+    <link rel="stylesheet" href="../../assets/css/animate.min.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard-app/style.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard-app/Pricing-Duo-badges.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard-app/Pricing-Duo-icons.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -52,7 +52,7 @@
     document.addEventListener("DOMContentLoaded", function(){
       const userData = JSON.parse(localStorage.getItem("userData"));
       if(!userData){
-        window.location.href = "../login.html";
+        window.location.href = "../../login.html";
         return;
       }
       
@@ -131,13 +131,13 @@
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="/dashboard" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-money-bill-wave me-2"></i> Dompet</a></li>
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" href="laporan.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-chart-line me-2"></i>&nbsp;Laporan Keuangan</a></li>
                     <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" href="riwayat.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-history me-2"></i> Riwayat Transaksi</a></li>
-                    <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" href="berlangganan.html" target="_parent" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);"><img src="../assets/img/diamond.gif" style="width: auto;height: 16px;margin-right: 8px;"> Upgrade Account</a></li>
-                    <li class="nav-item pulse animated infinite" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="tokoku/index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-store me-2"></i> Profile TokoKu</a></li>
+                    <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" href="berlangganan.html" target="_parent" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);"><img src="../../assets/img/diamond.gif" style="width: auto;height: 16px;margin-right: 8px;"> Upgrade Account</a></li>
+                    <li class="nav-item pulse animated infinite" style="padding: 3px;background: #4e73df;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;border-width: 2px;border-style: solid;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);"><a class="nav-link" aria-current="page" href="../tokoku/index.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" target="_parent"><i class="fas fa-store me-2"></i> Profile TokoKu</a></li>
                 </ul>
             </div>
             <div>
                 <ul class="nav d-flex justify-content-between">
-                    <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #650000;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border: 2px solid rgb(171,5,5) ;"><a class="nav-link" aria-current="page" href="../login.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" onclick="localStorage.removeItem(&#39;userData&#39;)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-logout-2 me-2">
+                    <li class="nav-item" data-bss-hover-animate="pulse" style="padding: 3px;background: #650000;color: var(--primary-color);font-size: 16px;margin-bottom: 23px;border-radius: 16px;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border: 2px solid rgb(171,5,5) ;"><a class="nav-link" aria-current="page" href="../../login.html" style="font-family: Nunito, sans-serif;color: rgb(255,255,255);" onclick="localStorage.removeItem(&#39;userData&#39;)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-logout-2 me-2">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <path d="M10 8v-2a2 2 0 0 1 2 -2h7a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-2"></path>
                                 <path d="M15 12h-12l3 -3"></path>
@@ -156,7 +156,7 @@
                 <nav class="navbar navbar-expand fixed-top d-flex topbar" style="background: rgba(255,255,255,0.49);backdrop-filter: opacity(1) blur(6px);-webkit-backdrop-filter: opacity(1) blur(6px);margin-bottom: 0px;margin-top: 5px;margin-right: 5px;margin-left: 5px;border-radius: 16px;box-shadow: 0px 3px 20px rgba(177,177,177,0.84);border: 3px solid rgba(255,255,255,0.29);">
                     <div class="container"><button class="btn btn-link rounded-circle me-3" id="sidebarToggleTop" type="button" data-bs-target="#offcanvas-menu" data-bs-toggle="offcanvas" style="color: rgb(255,255,255);background: #4e73df;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-width: 2px;border-style: solid;border-radius: 16px;"><i class="fas fa-bars"></i></button>
                         <ul class="navbar-nav flex-nowrap ms-auto">
-                            <li class="nav-item dropdown no-arrow mx-1"><a class="nav-link" href="berlangganan.html"><img class="pulse animated infinite" style="width: auto;height: 31px;" src="../assets/img/diamond.gif"></a></li>
+                            <li class="nav-item dropdown no-arrow mx-1"><a class="nav-link" href="berlangganan.html"><img class="pulse animated infinite" style="width: auto;height: 31px;" src="../../assets/img/diamond.gif"></a></li>
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="badge bg-danger badge-counter" style="transform: translateX(0px) translateY(-11px) translateZ(0px);">2</span><span class="badge bg-danger badge-counter premium2" style="transform: translateX(0px) translateY(-11px) translateZ(0px);">3</span><i class="fas fa-bell fa-fw" style="color: rgb(67,97,238);font-size: 21px;"></i></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in" style="border-radius: 16px;box-shadow: 0px 4px 20px 3px rgba(0,0,0,0.16);">
@@ -208,7 +208,7 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2" style="font-family: Nunito, sans-serif;color: rgb(0,0,0);font-weight: bold;"><span style="font-weight: normal !important;">Halo!&nbsp;</span><span class="d-none d-lg-inline username" style="font-family: Nunito, sans-serif;margin-right: 0px;">User</span></span><img class="border rounded-circle img-profile" src="../assets/img/icon/image2.jpeg"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2" style="font-family: Nunito, sans-serif;color: rgb(0,0,0);font-weight: bold;"><span style="font-weight: normal !important;">Halo!&nbsp;</span><span class="d-none d-lg-inline username" style="font-family: Nunito, sans-serif;margin-right: 0px;">User</span></span><img class="border rounded-circle img-profile" src="../../assets/img/icon/image2.jpeg"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in" style="border-radius: 16px;border: 2px solid rgb(225,225,230) ;"><a class="dropdown-item" href="#" style="padding-top: 8px;padding-bottom: 8px;color: rgb(40,40,40);font-family: Nunito, sans-serif;font-weight: bold;" data-bs-target="#profile-user" data-bs-toggle="modal"><i class="fas fa-user fa-sm fa-fw me-2" style="color: rgb(40,40,81);"></i>&nbsp;Profile</a>
                                         <div class="dropdown-divider"></div><a class="dropdown-item" style="padding-top: 8px;padding-bottom: 8px;color: rgb(40,40,40);font-family: Nunito, sans-serif;font-weight: bold;" onclick="localStorage.removeItem(&#39;userData&#39;)" href="../../index.html" rel="prev"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2" style="color: rgb(40,40,81);"></i>&nbsp;Logout</a>
                                     </div>
@@ -217,7 +217,7 @@
                         </ul>
                     </div>
                 </nav>
-                <div class="container-fluid">
+                <div class="container-fluid paddingAll">
                     <div class="card shadow" style="border-radius: 16px;">
                         <div class="app-container" style="width: 100%;">
                             <div class="alert alert-primary align-items-start alert-dismissible premium2" role="alert" id="alert" style="background: linear-gradient(15deg, #aa0000 12%, rgb(231,22,22) 49%, #ff5353 85%), #ff5f55;border-radius: 16px;width: 100%;"><button class="btn-close btn-close-white" type="button" aria-label="Close" data-bs-dismiss="alert"></button>
@@ -355,7 +355,7 @@
                 <div class="container">
                     <div class="row d-xxl-flex justify-content-xxl-center">
                         <div class="col-md-3 col-lg-3 col-xxl-2 d-flex d-xxl-flex flex-column align-items-start" style="padding: 16px;">
-                            <div class="fw-bold d-flex align-items-center" style="margin-bottom: 16px;"><img src="../assets/img/SEO/icon-wallet.webp" style="width: 35px;margin-bottom: 0px;border-radius: 10px;margin-right: 10px;"><span style="font-family: Nunito, sans-serif;font-weight: bold;">WalletKu.biz.id</span></div>
+                            <div class="fw-bold d-flex align-items-center" style="margin-bottom: 16px;"><img src="../../assets/img/SEO/icon-wallet.webp" style="width: 35px;margin-bottom: 0px;border-radius: 10px;margin-right: 10px;"><span style="font-family: Nunito, sans-serif;font-weight: bold;">WalletKu.biz.id</span></div>
                             <p class="copyright" style="font-family: Nunito, sans-serif;font-size: 16px;color: var(--text-color);line-height: 22px;">Ahli dalam mengatur keuangan dan tokomu.</p>
                         </div>
                         <div class="col-md-3" style="padding: 16px;">
@@ -393,13 +393,13 @@
                             <ul class="list-group">
                                 <li class="list-group-item" style="border-width: 0px;border-style: none;padding-top: 5px;padding-bottom: 5px;font-size: 16px;background: var(--primary-color);color: var(--card-color);border-radius: 6.6px 5.6px 0px -2px;border-bottom-right-radius: 16px;border-bottom-left-radius: 16px;border-top-right-radius: 16px;border-top-left-radius: 16px;margin-bottom: 16px;"><span style="font-family: Nunito, sans-serif;font-weight: bold;color: var(--card-color);font-size: 16px;">Founder</span></li>
                                 <li class="list-group-item" style="border-width: 0px;border-style: none;padding-top: 0px;padding-bottom: 5px;font-size: 16px;">
-                                    <div style="margin-bottom: 10px;"><img style="height: 70px;width: 70px;margin-right: 16px;border-radius: 16px;" src="../assets/img/bima.webp"><a href="https://www.threads.net/@bimboy.zxz?__pwa=1" style="color: var(--text-color);font-weight: bold;font-family: Nunito, sans-serif;" target="_blank">Bimboy.zxz<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-up-right-circle-fill" style="margin-left: 6px;">
+                                    <div style="margin-bottom: 10px;"><img style="height: 70px;width: 70px;margin-right: 16px;border-radius: 16px;" src="../../assets/img/bima.webp"><a href="https://www.threads.net/@bimboy.zxz?__pwa=1" style="color: var(--text-color);font-weight: bold;font-family: Nunito, sans-serif;" target="_blank">Bimboy.zxz<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-up-right-circle-fill" style="margin-left: 6px;">
                                                 <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8m5.904 2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707z"></path>
                                             </svg></a></div>
                                     <p class="text-muted" style="font-family: Nunito, sans-serif;margin-bottom: 16px;font-size: 14px;">Web developer</p>
                                 </li>
                                 <li class="list-group-item" style="border-width: 0px;border-style: none;padding-top: 0px;padding-bottom: 5px;font-size: 16px;">
-                                    <div style="margin-bottom: 10px;"><img style="height: 70px;width: 70px;margin-right: 16px;border-radius: 16px;" src="../assets/img/gyku.webp"><a href="https://www.threads.net/@gyku__" style="color: var(--text-color);font-weight: bold;font-family: Nunito, sans-serif;" target="_blank">Gyku__<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-up-right-circle-fill" style="margin-left: 6px;">
+                                    <div style="margin-bottom: 10px;"><img style="height: 70px;width: 70px;margin-right: 16px;border-radius: 16px;" src="../../assets/img/gyku.webp"><a href="https://www.threads.net/@gyku__" style="color: var(--text-color);font-weight: bold;font-family: Nunito, sans-serif;" target="_blank">Gyku__<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-up-right-circle-fill" style="margin-left: 6px;">
                                                 <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8m5.904 2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707z"></path>
                                             </svg></a></div>
                                     <p class="text-muted" style="font-family: Nunito, sans-serif;margin-bottom: 16px;font-size: 14px;">Support</p>
@@ -423,12 +423,12 @@
             </footer>
         </div>
     </div>
-    <script src="../assets/js/jquery.min.js"></script>
-    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../assets/js/aos.min.js"></script>
-    <script src="../assets/js/bs-init.js"></script>
+    <script src="../../assets/js/jquery.min.js"></script>
+    <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/aos.min.js"></script>
+    <script src="../../assets/js/bs-init.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../assets/js/dashboard-js/script.js"></script>
+    <script src="../../assets/js/dashboard-js/script.js"></script>
 </body>
 
 </html>
