@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Tracking Mata Uang & Komoditas</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #27ae60;
+            --background: #f5f6fa;
+            --text: #2d3436;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui;
+            margin: 0;
+            padding: 20px;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .price {
+            font-size: 2.2rem;
+            margin: 15px 0;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .meta {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .refresh-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            float: right;
+            transition: opacity 0.3s;
+        }
+
+        .refresh-btn:hover {
+            opacity: 0.9;
+        }
+
+        .error {
+            color: #e74c3c;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            background: #f8d7da;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Live Financial Tracker</h1>
+            <button class="refresh-btn" onclick="updatePrices(true)">⟳ Perbarui Sekarang</button>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h2>USD/IDR</h2>
+                <div class="price" id="usd-idr">-</div>
+                <div class="meta">
+                    <span>Sumber: ExchangeRate-API</span>
+                    <span id="usd-time">-</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Emas (USD/Oz)</h2>
+                <div class="price" id="gold-price">-</div>
+                <div class="meta">
+                    <span>Sumber: GoldAPI</span>
+                    <span id="gold-time">-</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Bitcoin (USD)</h2>
+                <div class="price" id="btc-price">-</div>
+                <div class="meta">
+                    <span>Sumber: CoinGecko</span>
+                    <span id="btc-time">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="history">
+            <h2>Riwayat 24 Jam</h2>
+            <div class="error" id="error-msg"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Waktu</th>
+                        <th>USD/IDR</th>
+                        <th>Emas</th>
+                        <th>Bitcoin</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body">
+                    <tr><td colspan="4">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi API
+        const API = {
+            forex: {
+                url: 'https://v6.exchangerate-api.com/v6/0763e74f5a6c11494c7159a2/latest/USD',
+                interval: 60000
+            },
+            gold: {
+                url: 'https://www.goldapi.io/api/XAU/USD',
+                headers: {
+                    'x-access-token': 'goldapi-ysi0219m9cps2vr-io'
+                },
+                interval: 180000
+            },
+            btc: {
+                url: 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd',
+                interval: 30000
+            }
+        };
+
+        // Penyimpanan Data
+        let history = JSON.parse(localStorage.getItem('priceHistory')) || [];
+        const MAX_HISTORY = 96; // Menyimpan 24 jam data (setiap 15 menit)
+
+        // Format Waktu
+        const formatTime = (date) => {
+            return new Intl.DateTimeFormat('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }).format(date);
+        };
+
+        // Format Angka
+        const formatCurrency = (value, currency) => {
+            const options = {
+                style: 'currency',
+                currency: currency,
+                minimumFractionDigits: 0,
+                maximumFractionDigits: currency === 'IDR' ? 0 : 2
+            };
+            return new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', options).format(value);
+        };
+
+        // Update Tampilan Riwayat
+        const updateHistory = () => {
+            const tbody = document.getElementById('history-body');
+            tbody.innerHTML = '';
+
+            history.slice(0, 24).forEach(entry => { // Tampilkan 24 entri terbaru
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatTime(new Date(entry.timestamp))}</td>
+                    <td>${formatCurrency(entry.forex, 'IDR'))}</td>
+                    <td>${formatCurrency(entry.gold, 'USD'))}</td>
+                    <td>${formatCurrency(entry.btc, 'USD'))}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        };
+
+        // Simpan Data
+        const saveData = (data) => {
+            const timestamp = Date.now();
+            
+            // Hanya simpan jika selisih 15 menit dari entri terakhir
+            if(history.length === 0 || timestamp - history[0].timestamp >= 900000) {
+                history.unshift({
+                    timestamp,
+                    forex: data.forex,
+                    gold: data.gold,
+                    btc: data.btc
+                });
+
+                // Pertahankan jumlah maksimal
+                if(history.length > MAX_HISTORY) history.pop();
+                
+                localStorage.setItem('priceHistory', JSON.stringify(history));
+                updateHistory();
+            }
+        };
+
+        // Fungsi Update Harga
+        const updatePrices = async (force = false) => {
+            try {
+                const errorElement = document.getElementById('error-msg');
+                errorElement.style.display = 'none';
+
+                // Ambil Data Forex
+                const forexRes = await fetch(API.forex.url);
+                const forexData = await forexRes.json();
+                if(forexData.result !== 'success') throw new Error('Error Forex API');
+                const forexRate = forexData.conversion_rates.IDR;
+
+                // Ambil Data Emas
+                const goldRes = await fetch(API.gold.url, { headers: API.gold.headers });
+                if(!goldRes.ok) throw new Error('Error Gold API');
+                const goldData = await goldRes.json();
+                const goldPrice = goldData.price;
+
+                // Ambil Data Bitcoin
+                const btcRes = await fetch(API.btc.url);
+                const btcData = await btcRes.json();
+                if(!btcData.bitcoin) throw new Error('Error BTC API');
+                const btcPrice = btcData.bitcoin.usd;
+
+                // Update DOM
+                const now = new Date();
+                document.getElementById('usd-idr').textContent = formatCurrency(forexRate, 'IDR');
+                document.getElementById('usd-time').textContent = formatTime(now);
+                
+                document.getElementById('gold-price').textContent = formatCurrency(goldPrice, 'USD');
+                document.getElementById('gold-time').textContent = formatTime(now);
+                
+                document.getElementById('btc-price').textContent = formatCurrency(btcPrice, 'USD');
+                document.getElementById('btc-time').textContent = formatTime(now);
+
+                // Simpan Data
+                if(force) saveData({ forex: forexRate, gold: goldPrice, btc: btcPrice });
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('error-msg').textContent = 
+                    `Gagal memperbarui data: ${error.message}. Coba lagi dalam 30 detik.`;
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        };
+
+        // Inisialisasi
+        updatePrices(true);
+        updateHistory();
+
+        // Jadwalkan Pembaruan
+        setInterval(() => updatePrices(false), API.forex.interval);
+        setInterval(() => updatePrices(false), API.gold.interval);
+        setInterval(() => updatePrices(false), API.btc.interval);
+
+        // Auto-save setiap 15 menit
+        setInterval(() => updatePrices(true), 900000);
+    </script>
+</body>
+</html>
