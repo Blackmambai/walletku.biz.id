@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let keranjangItems = [];  
     let produkList = JSON.parse(localStorage.getItem('produk') || '[]');  
 
-    // Fungsi untuk update stok produk  
+    // Fungsi untuk update stok produk (updated)
     function updateStokProduk(namaProduk, jumlah, operasi = 'kurangi') {  
         const produkIndex = produkList.findIndex(p => p.namaProduk === namaProduk);  
         if (produkIndex !== -1) {  
@@ -21,12 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {  
                 produkList[produkIndex].stokProduk += jumlah;  
             }  
+            // Pastikan stok tidak negatif
+            produkList[produkIndex].stokProduk = Math.max(produkList[produkIndex].stokProduk, 0);
             localStorage.setItem('produk', JSON.stringify(produkList));  
             muatProduk(cariProduk.value);  
         }  
     }  
 
-    // Fungsi Buat Struk  
+    // Fungsi untuk membuat struk  
     function buatStruk(nota) {  
         const pengaturanToko = JSON.parse(localStorage.getItem('pengaturanToko') || '{}');  
         
@@ -157,12 +159,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fungsi Cetak Nota  
     function cetakNota(nota) {  
         const jendelaCetak = window.open('', '_blank', 'width=800,height=600');  
-        
         if (!nota) {  
             alert('Nota tidak valid');  
             return;  
         }  
-
         jendelaCetak.document.open();  
         jendelaCetak.document.write(`  
             <html>  
@@ -170,26 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <title>Cetak Nota</title>  
                     <style>  
                         @media print {  
-                            body {   
-                                display: flex;   
-                                justify-content: center;   
-                                align-items: center;   
-                                margin: 0;  
-                                padding: 0;  
-                            }  
-                            #strukCetak {   
-                                max-width: 300px !important;   
-                                margin: 0 auto !important;  
-                            }  
+                            body { display: flex; justify-content: center; align-items: center; margin: 0; padding: 0; }  
+                            #strukCetak { max-width: 300px !important; margin: 0 auto !important; }  
                         }  
-                        body {   
-                            font-family: 'Courier New', monospace;   
-                            display: flex;   
-                            justify-content: center;   
-                            align-items: center;   
-                            height: 100vh;   
-                            margin: 0;   
-                        }  
+                        body { font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }  
                     </style>  
                 </head>  
                 <body>  
@@ -208,30 +192,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Muat Produk  
     function muatProduk(filter = '') {  
-        produkList = JSON.parse(localStorage.getItem('produk') || '[]');  
-        const produkTersedia = produkList.filter(p =>   
-            p.stokProduk > 0 &&   
-            p.namaProduk.toLowerCase().includes(filter.toLowerCase())  
+        const produkTersedia = produkList.filter(p =>  
+            p.stokProduk > 0 && p.namaProduk.toLowerCase().includes(filter.toLowerCase())  
         );  
 
         daftarProduk.innerHTML = produkTersedia.map(produk => `  
             <div class="col-md-4" style="padding: 5px;margin-bottom: 16px;">  
                 <div class="card summary-card paddingAll produk01" style="padding: 10px;">  
                     <div class="card-body" style="padding: 0px;">  
-                        <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.webp'}"   
-                             class="card-img-top"   
-                             alt="${produk.namaProduk}"  
-                             style="border-radius: 16px 16px 0 0; object-fit: cover; height: 200px; margin-bottom: 16px;">  
+                        <img src="${produk.fotoProduk || 'https://walletku.biz.id/assets/img/notfound.webp'}" class="card-img-top" alt="${produk.namaProduk}" style="border-radius: 16px 16px 0 0; object-fit: cover; height: 200px; margin-bottom: 16px;">  
                         <h5 class="card-title" style="font-family: Nunito, sans-serif;font-size: 20px;font-weight: bold;">${produk.namaProduk}</h5>  
-                        <p class="card-text" style="font-family: Nunito, sans-serif;font-size: 16px;color: rgb(43,43,44);font-weight: bold;">   
-                            Harga: Rp ${produk.hargaJual.toLocaleString()}<br />   
-                            Stok: ${produk.stokProduk}   
+                        <p class="card-text" style="font-family: Nunito, sans-serif;font-size: 16px;color: rgb(43,43,44);font-weight: bold;">  
+                            Harga: Rp ${produk.hargaJual.toLocaleString()}<br />  
+                            Stok: ${produk.stokProduk}  
                         </p>  
-                        <button class="btn btn-primary text-nowrap text-start d-flex d-xxl-flex justify-content-center align-items-center tambah-produk btnproduk1"   
-                                data-nama="${produk.namaProduk}"   
-                                data-harga="${produk.hargaJual}"   
+                        <button class="btn btn-primary text-nowrap text-start d-flex d-xxl-flex justify-content-center align-items-center tambah-produk btnproduk1"  
+                                data-nama="${produk.namaProduk}"  
+                                data-harga="${produk.hargaJual}"  
                                 data-stok="${produk.stokProduk}">  
-                            <i class="fas fa-plus-circle" style="margin-right: 10px;"></i> Tambah   
+                            <i class="fas fa-plus-circle" style="margin-right: 10px;"></i> Tambah  
                         </button>  
                     </div>  
                 </div>  
@@ -243,35 +222,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });  
     }  
 
-    // Tambah ke Keranjang (Dimodifikasi untuk update stok)  
+    // Tambah ke Keranjang (updated)
     function tambahKeKeranjang(e) {  
         const nama = e.currentTarget.dataset.nama;  
         const harga = parseFloat(e.currentTarget.dataset.harga);  
         const stok = parseInt(e.currentTarget.dataset.stok);  
 
         const produk = produkList.find(p => p.namaProduk === nama);  
-        if (!produk || produk.stokProduk < 1) {  
-            alert('Stok produk tidak mencukupi');  
-            return;  
-        }  
-
-        const itemExist = keranjangItems.find(item => item.nama === nama);  
+        if (!produk) return;
+        
+        // Cek apakah stok mencukupi
+        const itemExist = keranjangItems.find(item => item.nama === nama);
+        const jumlahDiKeranjang = itemExist ? itemExist.jumlah : 0;
+        
+        if (produk.stokProduk <= jumlahDiKeranjang) {
+            alert('Stok produk tidak mencukupi!');
+            return;
+        }
 
         if (itemExist) {  
-            if (itemExist.jumlah < stok) {  
-                itemExist.jumlah++;  
-                updateStokProduk(nama, 1, 'kurangi');  
-            } else {  
-                alert('Stok produk tidak mencukupi');  
-                return;  
-            }  
+            itemExist.jumlah++;  
         } else {  
-            keranjangItems.push({  
-                nama,  
-                harga,  
-                jumlah: 1  
-            });  
-            updateStokProduk(nama, 1, 'kurangi');  
+            keranjangItems.push({ nama, harga, jumlah: 1 });  
         }  
 
         updateKeranjang();  
@@ -279,22 +251,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update Keranjang  
     function updateKeranjang() {  
-        keranjang.innerHTML = keranjangItems.map((item, index) => `  
-            <li class="list-group-item d-flex justify-content-between align-items-center">  
-                <div>  
-                    <strong>${item.nama}</strong>  
-                    <small class="d-block">Rp ${item.harga.toLocaleString()} x ${item.jumlah}</small>  
-                </div>  
-                <div>  
-                    <button class="btn btn-sm btn-outline-danger me-2 kurang-item" data-index="${index}" data-nama="${item.nama}">  
-                        <i class="fas fa-minus"></i>  
-                    </button>  
-                    <button class="btn btn-sm btn-outline-danger hapus-item" data-index="${index}" data-nama="${item.nama}">  
-                        <i class="fas fa-trash"></i>  
-                    </button>  
-                </div>  
-            </li>  
-        `).join('');  
+        keranjang.innerHTML = keranjangItems.map((item, index) => {  
+            const produk = produkList.find(p => p.namaProduk === item.nama);
+            const stokTersedia = produk ? produk.stokProduk : 0;
+            const stokWarning = item.jumlah > stokTersedia ? 'style="color: red;"' : '';
+            
+            return `  
+                <li class="list-group-item d-flex justify-content-between align-items-center">  
+                    <div>  
+                        <strong>${item.nama}</strong>  
+                        <small class="d-block">Rp ${item.harga.toLocaleString()} x ${item.jumlah}</small>  
+                        <small class="d-block" ${stokWarning}>Stok tersedia: ${stokTersedia}</small>  
+                    </div>  
+                    <div>  
+                        <button class="btn btn-sm btn-outline-danger me-2 kurang-item" data-index="${index}" data-nama="${item.nama}">  
+                            <i class="fas fa-minus"></i>  
+                        </button>  
+                        <button class="btn btn-sm btn-outline-danger hapus-item" data-index="${index}" data-nama="${item.nama}">  
+                            <i class="fas fa-trash"></i>  
+                        </button>  
+                    </div>  
+                </li>  
+            `;
+        }).join('');  
 
         const total = keranjangItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);  
         totalHarga.textContent = `Rp ${total.toLocaleString()}`;  
@@ -306,32 +285,23 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.hapus-item').forEach(btn => {  
             btn.addEventListener('click', hapusItem);  
         });  
-
-        // Simpan keranjang sementara  
-        localStorage.setItem('keranjangSementara', JSON.stringify(keranjangItems));  
     }  
 
-    // Kurang Item (Dimodifikasi untuk update stok)  
+    // Kurang Item  
     function kurangItem(e) {  
         const index = e.currentTarget.dataset.index;  
-        const nama = e.currentTarget.dataset.nama;  
         
         if (keranjangItems[index].jumlah > 1) {  
             keranjangItems[index].jumlah--;  
-            updateStokProduk(nama, 1, 'tambah');  
         } else {  
-            updateStokProduk(nama, keranjangItems[index].jumlah, 'tambah');  
             keranjangItems.splice(index, 1);  
         }  
         updateKeranjang();  
     }  
 
-    // Hapus Item (Dimodifikasi untuk update stok)  
+    // Hapus Item  
     function hapusItem(e) {  
         const index = e.currentTarget.dataset.index;  
-        const nama = e.currentTarget.dataset.nama;  
-        
-        updateStokProduk(nama, keranjangItems[index].jumlah, 'tambah');  
         keranjangItems.splice(index, 1);  
         updateKeranjang();  
     }  
@@ -361,13 +331,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return;  
         }  
 
+        // Validasi stok sebelum pembayaran
+        let stokValid = true;
+        keranjangItems.forEach(item => {
+            const produk = produkList.find(p => p.namaProduk === item.nama);
+            if (!produk || produk.stokProduk < item.jumlah) {
+                stokValid = false;
+                alert(`Stok tidak cukup untuk produk ${item.nama}`);
+            }
+        });
+
+        if (!stokValid) return;
+
         const total = keranjangItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);  
         document.getElementById('totalPembayaran').value = `Rp ${total.toLocaleString()}`;  
-        
         new bootstrap.Modal(document.getElementById('modalPembayaran')).show();  
     });  
 
-    // Submit Pembayaran (Dimodifikasi untuk validasi stok)  
+    // Submit Pembayaran (updated)
     formPembayaran.addEventListener('submit', (e) => {  
         e.preventDefault();  
         const total = keranjangItems.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);  
@@ -380,47 +361,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return;  
         }  
 
-        // Validasi stok terakhir sebelum transaksi  
-        let stokValid = true;  
-        produkList = JSON.parse(localStorage.getItem('produk') || '[]');  
-        
-        for (const item of keranjangItems) {  
-            const produk = produkList.find(p => p.namaProduk === item.nama);  
-            if (!produk || produk.stokProduk < item.jumlah) {  
-                stokValid = false;  
-                alert(`Transaksi gagal! Stok ${item.nama} tidak mencukupi`);  
-                
-                // Kembalikan stok yang sudah dikurangi  
-                keranjangItems.forEach(item => {  
-                    updateStokProduk(item.nama, item.jumlah, 'tambah');  
-                });  
-                
-                keranjangItems = [];  
-                updateKeranjang();  
-                break;  
-            }  
-        }  
-
-        if (!stokValid) return;  
+        // Update stok produk setelah pembayaran berhasil
+        keranjangItems.forEach(item => {
+            updateStokProduk(item.nama, item.jumlah, 'kurangi');
+        });
 
         // Simpan nota  
         const nota = JSON.parse(localStorage.getItem('nota') || '[]');  
-        const notaBaru = {
-            tanggal: new Date().toISOString(), // Ganti toLocaleString() ke toISOString()
-            namaPelanggan,
-            metodePembayaran,
-            produk: keranjangItems,
-            totalHarga: total,
-            uangDiterima,
-            kembalian: uangDiterima - total
-        }; 
+        const notaBaru = {  
+            tanggal: new Date().toLocaleString(),  
+            namaPelanggan,  
+            metodePembayaran,  
+            produk: keranjangItems,  
+            totalHarga: total,  
+            uangDiterima,  
+            kembalian: uangDiterima - total  
+        };  
         nota.push(notaBaru);  
         localStorage.setItem('nota', JSON.stringify(nota));  
-
-        // **Pembaruan Stok Produk**  
-        keranjangItems.forEach(item => {  
-            updateStokProduk(item.nama, item.jumlah, 'kurangi'); // Mengurangi stok produk  
-        });  
 
         // Tampilkan struk  
         strukPembayaran.innerHTML = buatStruk(notaBaru);  
@@ -446,19 +404,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('kembalian').value = `Rp ${kembalian.toLocaleString()}`;  
     });  
 
-    // Muat keranjang sementara saat load  
-    const savedKeranjang = JSON.parse(localStorage.getItem('keranjangSementara') || '[]');  
-    if (savedKeranjang.length > 0) {  
-        // Kembalikan stok yang ada di keranjang sementara  
-        produkList = JSON.parse(localStorage.getItem('produk') || '[]');  
-        savedKeranjang.forEach(item => {  
-            updateStokProduk(item.nama, item.jumlah, 'tambah');  
-        });  
-        
-        // Kosongkan keranjang sementara  
-        localStorage.removeItem('keranjangSementara');  
-    }  
-
     // Muat produk awal  
     muatProduk();  
 
@@ -466,53 +411,4 @@ document.addEventListener('DOMContentLoaded', () => {
     cariProduk.addEventListener('input', (e) => {  
         muatProduk(e.target.value);  
     });  
-
-    // Backup Data  
-    document.getElementById('btnBackup').addEventListener('click', () => {  
-        const data = {  
-            produk: JSON.parse(localStorage.getItem('produk') || '[]'),  
-            nota: JSON.parse(localStorage.getItem('nota') || '[]'),  
-            pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')  
-        };  
-        
-        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });  
-        const url = URL.createObjectURL(blob);  
-        const a = document.createElement('a');  
-        a.href = url;  
-        a.download = `backup_${new Date().toISOString().split('T')[0]}.json`;  
-        document.body.appendChild(a);  
-        a.click();  
-        document.body.removeChild(a);  
-        URL.revokeObjectURL(url);  
-    });  
-
-    // Import Data  
-    document.getElementById('btnImport').addEventListener('click', () => {  
-        document.getElementById('fileImport').click();  
-    });  
-
-    document.getElementById('fileImport').addEventListener('change', function(e) {  
-        const file = e.target.files[0];  
-        if (!file) return;  
-
-        const reader = new FileReader();  
-        reader.onload = (event) => {  
-            try {  
-                const data = JSON.parse(event.target.result);  
-                localStorage.setItem('produk', JSON.stringify(data.produk));  
-                localStorage.setItem('nota', JSON.stringify(data.nota));  
-                localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));  
-                alert('Data berhasil diimpor!');  
-                muatProduk();  
-            } catch (error) {  
-                alert('Silahkan Refresh!');  
-            }  
-        };  
-        reader.readAsText(file);  
-    });  
-
-    // Bersihkan keranjang sementara saat halaman dimuat  
-    window.addEventListener('load', () => {  
-        localStorage.removeItem('keranjangSementara');  
-    });  
-});  
+});

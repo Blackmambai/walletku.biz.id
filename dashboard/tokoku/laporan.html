@@ -9,7 +9,6 @@
     <link rel="canonical" href="https://walletku.biz.id/dashboard/tokoku/laporan.html">
     <meta property="og:url" content="https://walletku.biz.id/dashboard/tokoku/laporan.html">
     <meta name="twitter:card" content="summary_large_image">
-    <meta property="og:type" content="website">
     <meta name="description" content="Mulai mengelola pemasukan dan pengeluaran-mu dengan mudah. dengan fitur backup export dan import dan mengelola aplikasi toko">
     <meta property="og:image" content="https://walletku.biz.id/assets/img/SEO/og1@2x.webp">
     <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
@@ -20,6 +19,7 @@
     <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
     <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="manifest" href="../../manifest.json" crossorigin="use-credentials">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="../../assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="../../assets/css/aos.min.css">
@@ -99,7 +99,7 @@
                                         </a><a class="dropdown-item align-items-center" href="#">
                                             <div class="d-flex">
                                                 <div><span class="small" style="color: rgb(88,88,94);">Bot</span>
-                                                    <p style="color: rgb(67,68,74);">Apa yang baru? di Beta version <strong>1.9.0.1 </strong>anda dapat menyimpan dan mengirimkan dana antar dompet satu ke dompet lainnya. ini memerlukan akses premium jika ingin menggunakan fiitur tersebut.</p>
+                                                    <p style="color: rgb(67,68,74);">Apa yang baru? di Beta version <strong>2.9.0.1 </strong>anda dapat menyimpan dan mengirimkan dana antar dompet satu ke dompet lainnya. ini memerlukan akses premium jika ingin menggunakan fiitur tersebut.</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -193,6 +193,7 @@
                                 <div class="col d-flex flex-column justify-content-start flex-sm-column flex-md-column flex-lg-row flex-xl-row flex-xxl-row align-items-xxl-start" style="gap: 16px;margin-bottom: 30px;">
                                     <div class="d-flex flex-column summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
                                         <div style="margin-right: 16px;margin-bottom: 16px;"><i class="fas fa-redo" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);padding: 10px;background: var(--card-color);border-radius: 16px;border-width: 2px;border-style: solid;"></i></div>
+                                        <div class="btn-group" role="group" style="overflow: hidden;border-radius: 16px;margin-bottom: 10px;"><button class="btn btn-primary" id="btnHarian" type="button" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-top-right-radius: 0px;border-bottom-right-radius: 0px;">Harian</button><button class="btn btn-primary" id="btnMingguan" type="button" style="border-radius: 0px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;">Mingguan</button><button class="btn btn-primary" id="btnBulanan" type="button" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-top-left-radius: 0px;border-bottom-left-radius: 0px;">Bulanan</button></div>
                                         <div>
                                             <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 16px;">Produk terlaris</h3>
                                         </div>
@@ -208,7 +209,7 @@
                                             </svg></div>
                                         <div>
                                             <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 16px;">Ringkasan Terakhir</h3>
-                                            <div class="btn-group" role="group" style="margin-bottom: 16px;"><button class="btn btn-outline-primary btn-sm active" id="btnHarian" style="padding-top: 8px;padding-bottom: 8px;padding-right: 12px;padding-left: 12px;font-family: Nunito, sans-serif;font-size: 16px;border-top-left-radius: 16px;border-bottom-left-radius: 16px;">Harian</button><button class="btn btn-outline-primary btn-sm" id="btnBulanan" style="padding-top: 8px;padding-bottom: 8px;padding-right: 12px;padding-left: 12px;font-family: Nunito, sans-serif;font-size: 16px;border-top-right-radius: 16px;border-bottom-right-radius: 16px;">Bulanan</button></div><canvas id="grafikPenjualan" width="300" height="200" style="display: block; box-sizing: border-box; height: 341px; width: 682px;"></canvas>
+                                            <div class="btn-group" role="group" style="overflow: hidden;border-radius: 16px;margin-bottom: 10px;"><button class="btn btn-primary" id="btnHariIni" type="button" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-top-right-radius: 0px;border-bottom-right-radius: 0px;">Harian</button><button class="btn btn-primary" id="btnMingguIni" type="button" style="border-radius: 0px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;">Mingguan</button><button class="btn btn-primary" id="btnBulanIni" type="button" style="border-radius: 0px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;">Bulanan</button><button class="btn btn-primary" id="btnTahunIni" type="button" style="border-radius: 0px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;">Tahunan</button><button class="btn btn-primary" id="btnCustom" type="button" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;border-top-left-radius: 0px;border-bottom-left-radius: 0px;" data-bs-target="#customDateFilter" data-bs-toggle="modal">Custom</button></div><canvas id="grafikPenjualan" width="300" height="200" style="display: block; box-sizing: border-box; height: 341px; width: 682px;"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -218,7 +219,7 @@
                                     <div class="d-flex flex-column summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
                                         <div class="d-flex justify-content-between">
                                             <div class="d-flex"><span style="font-size: 20px;font-family: Nunito, sans-serif;color: rgb(57,11,175);font-weight: bold;">Nota</span></div>
-                                            <div class="d-flex" style="gap: 16px;"><button class="btn btn-primary text-nowrap text-start d-xxl-flex justify-content-center align-items-center d-flex premium2" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" data-bs-toggle="modal" data-bs-target="#modalFilter"><i class="fas fa-filter" style="margin-right: 10px;"></i>Filter</button><a class="btn btn-primary disabled text-nowrap text-start d-none justify-content-center align-items-center d-flex" role="button" id="btnExportLaporan" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;"><i class="fas fa-file-export" style="margin-right: 10px;"></i> Export</a></div>
+                                            <div class="d-flex" style="gap: 16px;"><button class="btn btn-primary text-nowrap text-start d-xxl-flex justify-content-center align-items-center d-flex premium2" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;" data-bs-toggle="modal" data-bs-target="#customDateFilter"><i class="fas fa-filter" style="margin-right: 10px;"></i>Filter</button><a class="btn btn-primary disabled text-nowrap text-start d-none justify-content-center align-items-center d-flex" role="button" id="btnExportLaporan" style="border-radius: 16px;font-family: Nunito, sans-serif;box-shadow: 0px 6px 14px rgba(67,97,238,0.56);width: auto;"><i class="fas fa-file-export" style="margin-right: 10px;"></i> Export</a></div>
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive" style="font-family: Nunito, sans-serif;">
@@ -281,7 +282,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" role="dialog" tabindex="-1" id="modalFilter">
+                        <div class="modal fade" role="dialog" tabindex="-1" id="customDateFilter">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header justify-content-between">

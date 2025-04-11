@@ -3,57 +3,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileImport = document.getElementById('fileImport');
     const btnImport = document.getElementById('btnImport');
     const aktifitasTerakhir = document.getElementById('aktifitasTerakhir');
+    const kunjunganHariIni = document.getElementById('kunjunganHariIni');
     let grafikPenjualan = null;
-
-    // Backup Data
-    document.getElementById('btnBackup').addEventListener('click', () => {
-        const data = {
-            produk: JSON.parse(localStorage.getItem('produk') || '[]'),
-            nota: JSON.parse(localStorage.getItem('nota') || '[]'),
-            pengaturanToko: JSON.parse(localStorage.getItem('pengaturanToko') || '{}')
-        };
-        
-        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `backup_${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    });
-
-    // Import Data
-    document.getElementById('btnImport').addEventListener('click', () => {
-        document.getElementById('fileImport').click();
-    });
-
-    document.getElementById('fileImport').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            try {
-                const data = JSON.parse(event.target.result);
-                localStorage.setItem('produk', JSON.stringify(data.produk));
-                localStorage.setItem('nota', JSON.stringify(data.nota));
-                localStorage.setItem('pengaturanToko', JSON.stringify(data.pengaturanToko));
-                alert('Data berhasil diimpor!');
-                updateDashboard();
-            } catch (error) {
-                alert('Silahkan Refresh!');
-            }
-        };
-        reader.readAsText(file);
-    });
 
     // Fungsi Update Dashboard
     function updateDashboard() {
         const nota = JSON.parse(localStorage.getItem('nota') || '[]');
         const produk = JSON.parse(localStorage.getItem('produk') || '[]');
-
+        const today = new Date().toISOString().split('T')[0];
+        
+        // New Function: Hitung Kunjungan Hari Ini
+    function hitungKunjunganHariIni() {
+        const today = new Date().toISOString().split('T')[0];
+        const kunjungan = nota.filter(n => n.tanggal.startsWith(today)).length;
+        kunjunganHariIni.textContent = kunjungan;
+        
+        // Add trend indicator
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+        const kunjunganKemarin = nota.filter(n => n.tanggal.startsWith(yesterdayStr)).length;
+        
+        const trendIndicator = document.getElementById('trendIndicator');
+        trendIndicator.innerHTML = '';
+        
+        if (kunjunganKemarin > 0) {
+            const persentase = ((kunjungan - kunjunganKemarin) / kunjunganKemarin * 100).toFixed(1);
+            const trendIcon = kunjungan > kunjunganKemarin ? 
+                `<i class="fas fa-arrow-up text-success"></i> ${persentase}%` : 
+                `<i class="fas fa-arrow-down text-danger"></i> ${Math.abs(persentase)}%`;
+            
+            trendIndicator.innerHTML = `(${trendIcon} dari kemarin)`;
+        }
+    }
+        
         // Total Penjualan
         const totalPenjualan = nota.reduce((total, n) => total + n.totalHarga, 0);
         document.getElementById('totalPenjualan').textContent = `Rp ${totalPenjualan.toLocaleString()}`;
@@ -87,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const produkTerlarisList = Object.entries(penjualanProduk)
             .sort((a, b) => b[1] - a[1])
-            .slice(0, 5)
+            .slice(0, 20)
             .map(([nama, jumlah]) => `
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     ${nama}

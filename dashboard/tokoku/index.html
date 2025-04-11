@@ -9,7 +9,6 @@
     <link rel="canonical" href="https://walletku.biz.id/dashboard/tokoku/">
     <meta property="og:url" content="https://walletku.biz.id/dashboard/tokoku/">
     <meta name="twitter:card" content="summary_large_image">
-    <meta property="og:type" content="website">
     <meta name="description" content="Mulai mengelola pemasukan dan pengeluaran-mu dengan mudah. dengan fitur backup export dan import dan mengelola aplikasi toko">
     <meta property="og:image" content="https://walletku.biz.id/assets/img/SEO/og1@2x.webp">
     <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
@@ -20,6 +19,7 @@
     <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
     <link rel="icon" type="image/png" sizes="484x484" href="../../assets/img/SEO/icon-wallet.webp">
     <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="manifest" href="../../manifest.json" crossorigin="use-credentials">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="../../assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="../../assets/css/aos.min.css">
@@ -99,7 +99,7 @@
                                         </a><a class="dropdown-item align-items-center" href="#">
                                             <div class="d-flex">
                                                 <div><span class="small" style="color: rgb(88,88,94);">Bot</span>
-                                                    <p style="color: rgb(67,68,74);">Apa yang baru? di Beta version <strong>1.9.0.1 </strong>anda dapat menyimpan dan mengirimkan dana antar dompet satu ke dompet lainnya. ini memerlukan akses premium jika ingin menggunakan fiitur tersebut.</p>
+                                                    <p style="color: rgb(67,68,74);">Apa yang baru? di Beta version <strong>2.9.0.1 </strong>anda dapat menyimpan dan mengirimkan dana antar dompet satu ke dompet lainnya. ini memerlukan akses premium jika ingin menggunakan fiitur tersebut.</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -160,24 +160,58 @@
                             </div>
                             <div class="row">
                                 <div class="col d-flex flex-column flex-sm-column flex-md-column flex-lg-row align-items-lg-start flex-xl-row flex-xxl-row" style="gap: 16px;margin-bottom: 30px;">
-                                    <div class="d-flex summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
-                                        <div style="margin-right: 16px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -64 640 640" width="1em" height="1em" fill="currentColor" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);padding: 10px;background: var(--card-color);border-radius: 16px;border-width: 2px;border-style: solid;">
-                                                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
-                                                <path d="M96 96V320c0 35.3 28.7 64 64 64H576c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H160c-35.3 0-64 28.7-64 64zm64 160c35.3 0 64 28.7 64 64H160V256zM224 96c0 35.3-28.7 64-64 64V96h64zM576 256v64H512c0-35.3 28.7-64 64-64zM512 96h64v64c-35.3 0-64-28.7-64-64zM288 208a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zM48 120c0-13.3-10.7-24-24-24S0 106.7 0 120V360c0 66.3 53.7 120 120 120H520c13.3 0 24-10.7 24-24s-10.7-24-24-24H120c-39.8 0-72-32.2-72-72V120z"></path>
-                                            </svg></div>
-                                        <div>
-                                            <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 0px;">Total penjualan</h3>
-                                            <p id="totalPenjualan" style="font-family: Nunito, sans-serif;font-weight: bold;color: rgb(45,46,55);font-size: 20px;margin-bottom: 0px;">Rp0</p>
+                                    <div class="d-flex flex-column flex-sm-column flex-md-column flex-lg-column flex-xl-column flex-xxl-column" style="gap: 16px;width: 100%;">
+                                        <div class="d-flex flex-column flex-sm-column flex-md-column flex-lg-row flex-xl-row flex-xxl-row" style="gap: 16px;width: 100%;">
+                                            <div class="d-flex summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
+                                                <div style="margin-right: 16px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -64 640 640" width="1em" height="1em" fill="currentColor" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);padding: 10px;background: var(--card-color);border-radius: 16px;border-width: 2px;border-style: solid;">
+                                                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                                                        <path d="M96 96V320c0 35.3 28.7 64 64 64H576c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H160c-35.3 0-64 28.7-64 64zm64 160c35.3 0 64 28.7 64 64H160V256zM224 96c0 35.3-28.7 64-64 64V96h64zM576 256v64H512c0-35.3 28.7-64 64-64zM512 96h64v64c-35.3 0-64-28.7-64-64zM288 208a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zM48 120c0-13.3-10.7-24-24-24S0 106.7 0 120V360c0 66.3 53.7 120 120 120H520c13.3 0 24-10.7 24-24s-10.7-24-24-24H120c-39.8 0-72-32.2-72-72V120z"></path>
+                                                    </svg></div>
+                                                <div>
+                                                    <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 0px;">Total penjualan</h3>
+                                                    <p id="totalPenjualan" style="font-family: Nunito, sans-serif;font-weight: bold;color: rgb(45,46,55);font-size: 20px;margin-bottom: 0px;">Rp0</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
+                                                <div style="margin-right: 16px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-32 0 512 512" width="1em" height="1em" fill="currentColor" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);padding: 10px;background: var(--card-color);border-radius: 16px;border-width: 2px;border-style: solid;">
+                                                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                                                        <path d="M50.7 58.5L0 160H208V32H93.7C75.5 32 58.9 42.3 50.7 58.5zM240 160H448L397.3 58.5C389.1 42.3 372.5 32 354.3 32H240V160zm208 32H0V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192z"></path>
+                                                    </svg></div>
+                                                <div>
+                                                    <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 0px;">Total Stock</h3>
+                                                    <p id="totalStokProduk" style="font-family: Nunito, sans-serif;font-weight: bold;color: rgb(45,46,55);font-size: 20px;margin-bottom: 0px;">Belum ada stock</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
-                                        <div style="margin-right: 16px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-32 0 512 512" width="1em" height="1em" fill="currentColor" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);padding: 10px;background: var(--card-color);border-radius: 16px;border-width: 2px;border-style: solid;">
-                                                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
-                                                <path d="M50.7 58.5L0 160H208V32H93.7C75.5 32 58.9 42.3 50.7 58.5zM240 160H448L397.3 58.5C389.1 42.3 372.5 32 354.3 32H240V160zm208 32H0V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192z"></path>
-                                            </svg></div>
-                                        <div>
-                                            <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 0px;">Total Stock</h3>
-                                            <p id="totalStokProduk" style="font-family: Nunito, sans-serif;font-weight: bold;color: rgb(45,46,55);font-size: 20px;margin-bottom: 0px;">Belum ada stock</p>
+                                        <div class="d-flex" style="gap: 16px;width: 100%;">
+                                            <div class="d-flex summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
+                                                <div style="margin-right: 16px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" style="height: auto;width: auto;font-size: 35px;color: rgb(67,97,238);padding: 10px;background: var(--card-color);border-radius: 16px;border-width: 2px;border-style: solid;">
+                                                        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                                                        <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM135.1 217.4l107.1-99.9c3.8-3.5 8.7-5.5 13.8-5.5s10.1 2 13.8 5.5l107.1 99.9c4.5 4.2 7.1 10.1 7.1 16.3c0 12.3-10 22.3-22.3 22.3H304v96c0 17.7-14.3 32-32 32H240c-17.7 0-32-14.3-32-32V256H150.3C138 256 128 246 128 233.7c0-6.2 2.6-12.1 7.1-16.3z"></path>
+                                                    </svg></div>
+                                                <div style="width: 100%;padding: 16px;background: rgba(235,235,235,0.71);border-radius: 16px;">
+                                                    <p id="totalPenjualan-1" style="font-family: Nunito, sans-serif;font-weight: bold;color: rgb(45,46,55);font-size: 20px;margin-bottom: 0px;">Version&nbsp;</p>
+                                                    <div style="margin-bottom: 10px;">
+                                                        <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 0px;">2.9.0.1</h3>
+                                                        <p style="font-size: 16px;font-family: Nunito, sans-serif;margin-bottom: 0px;"><span style="font-weight: normal !important;">Apa sih yang baru?</span></p>
+                                                        <ul>
+                                                            <li style="font-family: Nunito, sans-serif;">Update produk yang dapat di tambahkan unlimited.</li>
+                                                            <li style="font-family: Nunito, sans-serif;">Laporan yang dapat di lihat dari harian, mingguan, bulanan dan tahunan untuk pengguna&nbsp;<span class="badge bg-primary" style="background: linear-gradient(-135deg, #ffd600 21%, #dcd773 52%, rgb(255,214,0) 82%);text-shadow: 0px 1px 2px rgb(0,0,0);box-shadow: 0px 3px rgb(204,159,0);">PREMIUM</span>&nbsp;</li>
+                                                            <li style="font-family: Nunito, sans-serif;">Update perhitungan kunjungan dan produk yang sedang ramai di beli.</li>
+                                                            <li style="font-family: Nunito, sans-serif;">Nota digital yang eyecatching 😍</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div style="margin-bottom: 10px;">
+                                                        <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 0px;">1.9.0.1</h3>
+                                                        <p style="font-size: 16px;font-family: Nunito, sans-serif;margin-bottom: 0px;"><span style="font-weight: normal !important;">Apa sih yang baru?</span></p>
+                                                        <ul>
+                                                            <li style="font-family: Nunito, sans-serif;">Fitur import dan export untuk pengguna&nbsp;<span class="badge bg-primary" style="background: linear-gradient(-135deg, #ffd600 21%, #dcd773 52%, rgb(255,214,0) 82%);text-shadow: 0px 1px 2px rgb(0,0,0);box-shadow: 0px 3px rgb(204,159,0);">PREMIUM</span>&nbsp;</li>
+                                                            <li style="font-family: Nunito, sans-serif;">Menghitung laba keseluruhan dan bulanan</li>
+                                                            <li style="font-family: Nunito, sans-serif;">Nota yang dapat di cetak ulang</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="d-flex flex-column summary-card total-balance paddingAll" style="box-shadow: 0px 6px 14px rgba(67,97,238,0.56);border-left-width: 5px;border-radius: 16px;margin-bottom: 0px;width: 100%;">
@@ -211,7 +245,7 @@
                                                 <path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm96 288H448c17.7 0 32-14.3 32-32V251.8c0-7.6-2.7-15-7.7-20.8l-65.8-76.8c-12.1-14.2-33.7-15-46.9-1.8l-21 21c-10 10-26.4 9.2-35.4-1.6l-39.2-47c-12.6-15.1-35.7-15.4-48.7-.6L135.9 215c-5.1 5.8-7.9 13.3-7.9 21.1v84c0 17.7 14.3 32 32 32z"></path>
                                             </svg></div>
                                         <div>
-                                            <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 16px;">Ringkasan Terakhir</h3><canvas id="grafikPenjualan" width="300" height="200" style="display: block; box-sizing: border-box; height: 341px; width: 682px;"></canvas>
+                                            <h3 style="font-size: 16px;font-family: Nunito, sans-serif;color: #322f2f;font-weight: bold;margin-bottom: 16px;">Ringkasan Penjualan</h3><canvas id="grafikPenjualan" width="300" height="200" style="display: block; box-sizing: border-box; height: 341px; width: 682px;"></canvas>
                                         </div>
                                     </div>
                                 </div>
